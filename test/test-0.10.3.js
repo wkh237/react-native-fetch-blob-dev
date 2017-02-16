@@ -11,6 +11,7 @@ import {
   Platform,
   Dimensions,
   BackAndroid,
+  CameraRoll,
   AsyncStorage,
   Image,
 } from 'react-native';
@@ -24,7 +25,7 @@ const { Assert, Comparer, Info, prop } = RNTest
 const describe = RNTest.config({
   group : '0.10.3',
   run : true,
-  expand : true,
+  expand : false,
   timeout : 20000,
 })
 const { TEST_SERVER_URL, TEST_SERVER_URL_SSL, FILENAME, DROPBOX_TOKEN, styles } = prop()
@@ -32,48 +33,48 @@ const dirs = RNFetchBlob.fs.dirs
 let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 let begin = Date.now()
 
-describe('#230 #249 cookies manipulation', (report, done) => {
-
-  RNFetchBlob
-  .fetch('GET', `${TEST_SERVER_URL}/cookie/249230`)
-  .then((res) => RNFetchBlob.net.getCookies())
-  .then((cookies) => {
-    console.log(cookies)
-    report(<Assert
-      key="should set 10 cookies"
-      expect={10}
-      actual={cookies['localhost'].length}/>)
-    return RNFetchBlob.fetch('GET', `${TEST_SERVER_URL}/cookie-echo`)
-  })
-  .then((res) => {
-    console.log(res.data)
-    let cookies = String(res.data).split(';')
-    report(<Assert
-      key="should send 10 cookies"
-      expect={10}
-      actual={cookies.length}/>)
-    return RNFetchBlob.net.removeCookies()
-  })
-  .then(() => RNFetchBlob.net.getCookies('localhost'))
-  .then((cookies) => {
-    report(<Assert
-      key="should have no cookies"
-      expect={undefined}
-      actual={cookies['localhost']}/>)
-    return RNFetchBlob.fetch('GET', `${TEST_SERVER_URL}/cookie-echo`)
-  })
-  .then((res) => {
-    console.log(res.data)
-    let cookies = String(res.data).split(';')
-    cookies = _.reject(cookies, r => r.length < 2)
-    report(<Assert
-      key="should send no cookies"
-      expect={0}
-      actual={cookies.length}/>)
-    done()
-  })
-
-})
+// describe('#230 #249 cookies manipulation', (report, done) => {
+//
+//   RNFetchBlob
+//   .fetch('GET', `${TEST_SERVER_URL}/cookie/249230`)
+//   .then((res) => RNFetchBlob.net.getCookies(`${TEST_SERVER_URL}`))
+//   .then((cookies) => {
+//     console.log(cookies)
+//     report(<Assert
+//       key="should set 10 cookies"
+//       expect={10}
+//       actual={cookies.length}/>)
+//     return RNFetchBlob.fetch('GET', `${TEST_SERVER_URL}/cookie-echo`)
+//   })
+//   .then((res) => {
+//     console.log('##',res.data)
+//     let cookies = String(res.data).split(';')
+//     report(<Assert
+//       key="should send 10 cookies"
+//       expect={10}
+//       actual={cookies.length}/>)
+//     return RNFetchBlob.net.removeCookies(`${TEST_SERVER_URL}`)
+//   })
+//   .then(() => RNFetchBlob.net.getCookies('localhost'))
+//   .then((cookies) => {
+//     report(<Assert
+//       key="should have no cookies"
+//       expect={undefined}
+//       actual={cookies['localhost']}/>)
+//     return RNFetchBlob.fetch('GET', `${TEST_SERVER_URL}/cookie-echo`)
+//   })
+//   .then((res) => {
+//     console.log(res.data)
+//     let cookies = String(res.data).split(';')
+//     cookies = _.reject(cookies, r => r.length < 2)
+//     report(<Assert
+//       key="should send no cookies"
+//       expect={0}
+//       actual={cookies.length}/>)
+//     done()
+//   })
+//
+// })
 
 describe('#254 IOS fs.stat lastModified date correction', (report, done) => {
 
@@ -125,7 +126,8 @@ describe('#264 network exceptions should be catachable', (report, done) => {
     console.log(res.info())
   })
   .catch((err) => {
-    console.log('##err',err)
+    report(<Assert key="server error should be catchable" expect={true} actual={true}/>)
+    done()
   })
 
 })
@@ -143,8 +145,27 @@ describe('readstream with empty buffer', (report, done) => {
       stream.onData((chunk) => { result += chunk })
       stream.onError((err) => console.log('err' + err))
       stream.onEnd(() => {
-        console.log(result)
-        console.log(JSON.parse(result))
+        report(<Assert key="content size should be correct" expect={12} actual={result.length}/>)
+        done()
+      })
+    })
+
+})
+
+describe('#266 IOS readFile crashes the app', (report, done) => {
+
+  CameraRoll.getPhotos({first : 10})
+    .then((resp) => {
+      let url = resp.edges[0].node.image.uri
+      console.log('CameraRoll',url+'123')
+      fs
+      .readFile('assets-library://asset/asset.JPG?id=83C135B6-A77C-4752-B868-6BDA7183ADE7123&ext=JPG', 'base64')
+      .then((data) => {
+        report(<Assert key="error should be catchable" expect={true} actual={false}/>)
+      })
+      .catch((err) => {
+        report(<Assert key="error should be catchable" expect={true} actual={true}/>)
+        done()
       })
     })
 
