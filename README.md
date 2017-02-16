@@ -1,6 +1,5 @@
-This repository is for developers who interested in modifying and improving [react-native-fetch-blob](https://github.com/wkh237/react-native-fetch-blob).
 
-# API documents [Click Here](https://github.com/wkh237/react-native-fetch-blob/wiki/Fetch-API)
+This repository is for developers who interested in modifying and improving [react-native-fetch-blob](https://github.com/wkh237/react-native-fetch-blob).
 
 # Feature branch [v0.11.0](https://github.com/wkh237/react-native-fetch-blob/tree/0.11.0)
 # Bug fix branch [v0.10.3](https://github.com/wkh237/react-native-fetch-blob/tree/0.10.3)
