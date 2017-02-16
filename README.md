@@ -14,7 +14,7 @@ This repository is for developers who interested in modifying and improving [rea
 This repository use `git submodule`, for first time clone
 
 ```sh
-$ git clone --recursive -j8 git://github.com/foo/bar.git
+$ git clone --recursive -j8 https://github.com/wkh237/react-native-fetch-blob-dev.git
 ```
 
 update submodules 
