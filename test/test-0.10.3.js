@@ -76,97 +76,116 @@ let begin = Date.now()
 //
 // })
 
-describe('#254 IOS fs.stat lastModified date correction', (report, done) => {
+// describe('#254 IOS fs.stat lastModified date correction', (report, done) => {
+//
+//   let path = dirs.DocumentDir + '/temp' + Date.now()
+//   fs.createFile(path, 'hello', 'utf8' )
+//     .then(() => fs.stat(path))
+//     .then((stat) => {
+//       console.log(stat)
+//       let p = stat.lastModified / Date.now()
+//       report(<Assert key="date is correct" expect={true} actual={ p< 1.05 && p > 0.95}/>)
+//       done()
+//     })
+//
+// })
+//
+// describe('#263 parallel request', (report, done) => {
+//   let urls = [
+//     `${TEST_SERVER_URL}/public/1mb-dummy`,
+//     `${TEST_SERVER_URL}/public/2mb-dummy`,
+//     `${TEST_SERVER_URL}/public/404`
+//   ]
+//   let size = [1000000, 1310720, 23]
+//   let asserts = []
+//   new Promise
+//   .all(urls.map((url) => RNFetchBlob.fetch('GET', url)))
+//   .then((results) => {
+//     _.each(results, (r, i) => {
+//       report(
+//         <Assert key={`redirect URL ${i} should be correct`}
+//           expect={urls[i]}
+//           actual={r.info().redirects[0]}/>)
+//       report(<Assert key={`content ${i} should be correct`}
+//         expect={size[i]}
+//         actual={r.data.length}/>)
+//     })
+//     done()
+//   })
+//
+// })
+//
+// describe('#264 network exceptions should be catachable', (report, done) => {
+//
+//   let task = RNFetchBlob
+//   .config({ fileCache : true})
+//   .fetch('GET',`${TEST_SERVER_URL}/interrupt`)
+//   task
+//   .then((res) => {
+//     console.log(res.data)
+//     console.log(res.info())
+//   })
+//   .catch((err) => {
+//     report(<Assert key="server error should be catchable" expect={true} actual={true}/>)
+//     done()
+//   })
+//
+// })
+//
+// describe('readstream with empty buffer', (report, done) => {
+//
+//   let data = { cool : 100 }
+//   let path = dirs.DocumentDir + '/test' + Date.now()
+//   let result = ''
+//
+//   fs.writeFile(path, JSON.stringify(data), 'utf8')
+//     .then(() => fs.readStream(path, 'utf8'))
+//     .then((stream) => {
+//       stream.open()
+//       stream.onData((chunk) => { result += chunk })
+//       stream.onError((err) => console.log('err' + err))
+//       stream.onEnd(() => {
+//         report(<Assert key="content size should be correct" expect={12} actual={result.length}/>)
+//         done()
+//       })
+//     })
+//
+// })
+//
+// describe('#266 IOS readFile crashes the app', (report, done) => {
+//
+//   CameraRoll.getPhotos({first : 10})
+//     .then((resp) => {
+//       let url = resp.edges[0].node.image.uri
+//       console.log('CameraRoll',url+'123')
+//       fs
+//       .readFile('assets-library://asset/asset.JPG?id=83C135B6-A77C-4752-B868-6BDA7183ADE7123&ext=JPG', 'base64')
+//       .then((data) => {
+//         report(<Assert key="error should be catchable" expect={true} actual={false}/>)
+//       })
+//       .catch((err) => {
+//         report(<Assert key="error should be catchable" expect={true} actual={true}/>)
+//         done()
+//       })
+//     })
+//
+// })
 
-  let path = dirs.DocumentDir + '/temp' + Date.now()
-  fs.createFile(path, 'hello', 'utf8' )
-    .then(() => fs.stat(path))
-    .then((stat) => {
-      console.log(stat)
-      let p = stat.lastModified / Date.now()
-      report(<Assert key="date is correct" expect={true} actual={ p< 1.05 && p > 0.95}/>)
-      done()
-    })
-
-})
-
-describe('#263 parallel request', (report, done) => {
-  let urls = [
-    `${TEST_SERVER_URL}/public/1mb-dummy`,
-    `${TEST_SERVER_URL}/public/2mb-dummy`,
-    `${TEST_SERVER_URL}/public/404`
-  ]
-  let size = [1000000, 1310720, 23]
-  let asserts = []
-  new Promise
-  .all(urls.map((url) => RNFetchBlob.fetch('GET', url)))
-  .then((results) => {
-    _.each(results, (r, i) => {
-      report(
-        <Assert key={`redirect URL ${i} should be correct`}
-          expect={urls[i]}
-          actual={r.info().redirects[0]}/>)
-      report(<Assert key={`content ${i} should be correct`}
-        expect={size[i]}
-        actual={r.data.length}/>)
-    })
+describe('#268 HTTPS requests could not be canceled', (report, done) => {
+  let task = RNFetchBlob.config({
+    fileCache : true
+  })
+  .fetch('GET', `https://rnfb-test-app.firebaseapp.com/cat.JPG`)
+  task.progress((now, total) => {
+    console.log(now, total)
+  })
+  task.cancel()
+  task.then(() => {
+    report(<Assert key="request should not success" expect={false} actual={true}/>)
     done()
   })
-
-})
-
-describe('#264 network exceptions should be catachable', (report, done) => {
-
-  let task = RNFetchBlob
-  .config({ fileCache : true})
-  .fetch('GET',`${TEST_SERVER_URL}/interrupt`)
-  task
-  .then((res) => {
-    console.log(res.data)
-    console.log(res.info())
-  })
-  .catch((err) => {
-    report(<Assert key="server error should be catchable" expect={true} actual={true}/>)
+  .catch(() => {
+    report(<Assert key="request should not success" expect={true} actual={true}/>)
     done()
   })
-
-})
-
-describe('readstream with empty buffer', (report, done) => {
-
-  let data = { cool : 100 }
-  let path = dirs.DocumentDir + '/test' + Date.now()
-  let result = ''
-
-  fs.writeFile(path, JSON.stringify(data), 'utf8')
-    .then(() => fs.readStream(path, 'utf8'))
-    .then((stream) => {
-      stream.open()
-      stream.onData((chunk) => { result += chunk })
-      stream.onError((err) => console.log('err' + err))
-      stream.onEnd(() => {
-        report(<Assert key="content size should be correct" expect={12} actual={result.length}/>)
-        done()
-      })
-    })
-
-})
-
-describe('#266 IOS readFile crashes the app', (report, done) => {
-
-  CameraRoll.getPhotos({first : 10})
-    .then((resp) => {
-      let url = resp.edges[0].node.image.uri
-      console.log('CameraRoll',url+'123')
-      fs
-      .readFile('assets-library://asset/asset.JPG?id=83C135B6-A77C-4752-B868-6BDA7183ADE7123&ext=JPG', 'base64')
-      .then((data) => {
-        report(<Assert key="error should be catchable" expect={true} actual={false}/>)
-      })
-      .catch((err) => {
-        report(<Assert key="error should be catchable" expect={true} actual={true}/>)
-        done()
-      })
-    })
-
 })
