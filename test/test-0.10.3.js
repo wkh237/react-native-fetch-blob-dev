@@ -171,21 +171,54 @@ let begin = Date.now()
 //
 // })
 
-describe('#268 HTTPS requests could not be canceled', (report, done) => {
-  let task = RNFetchBlob.config({
-    fileCache : true
-  })
-  .fetch('GET', `https://rnfb-test-app.firebaseapp.com/cat.JPG`)
-  task.progress((now, total) => {
-    console.log(now, total)
-  })
-  task.cancel()
-  task.then(() => {
-    report(<Assert key="request should not success" expect={false} actual={true}/>)
+// describe('#268 HTTPS requests could not be canceled', (report, done) => {
+//   let task = RNFetchBlob.config({
+//     fileCache : true
+//   })
+//   .fetch('GET', `https://rnfb-test-app.firebaseapp.com/cat.JPG`)
+//   task.progress((now, total) => {
+//     console.log(now, total)
+//   })
+//   task.cancel()
+//   task.then(() => {
+//     report(<Assert key="request should not success" expect={false} actual={true}/>)
+//     done()
+//   })
+//   .catch(() => {
+//     report(<Assert key="request should not success" expect={true} actual={true}/>)
+//     done()
+//   })
+// })
+
+describe('#293 the content type encoding suffix should be stripped', (report, done) => {
+
+  let run = function(ctype, val) {
+    return new Promise((resolve, reject) => {
+      let header = {}
+      header[ctype] = val
+      let task = RNFetchBlob.fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
+      .then((res) => {
+        return RNFetchBlob.fetch('PUT', `${TEST_SERVER_URL}/xhr-header`, header,ctype, res.data)
+      })
+      .then((res) => {
+        console.log(ctype, val, res.json())
+        report(<Assert
+          key={`${ctype + val} srtipes correctly`}
+          expect="image/png"
+          actual={res.json()['content-type']}/>)
+        resolve()
+      })
+    })
+  }
+
+  Promise.all([
+    run('Content-Type', 'image/png;base64'),
+    run('Content-Type', 'image/png;BASE64'),
+    run('content-type', 'image/png;base64'),
+    run('content-type', 'image/png;BASE64')
+  ]).then(() => {
     done()
   })
-  .catch(() => {
-    report(<Assert key="request should not success" expect={true} actual={true}/>)
-    done()
-  })
+
+
 })

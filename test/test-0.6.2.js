@@ -33,6 +33,7 @@ describe('upload asset from camera roll', (report, done) => {
   let tick2 = Date.now()
   CameraRoll.getPhotos({first : 10})
     .then((resp) => {
+      console.log(resp)
       let url = resp.edges[0].node.image.uri
       console.log('CameraRoll',url)
       photo = url
