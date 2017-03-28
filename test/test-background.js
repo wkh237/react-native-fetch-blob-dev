@@ -30,22 +30,17 @@ describe('background http response', (report, done) => {
   let count = 0
 
   let task = RNFetchBlob.config({
-    timeout : -1
-  }).fetch('GET', `${TEST_SERVER_URL}/long/3600`, {
+    timeout : -1,
+    // ios : { background : true }
+  })
+  .fetch('GET', `${TEST_SERVER_URL}/long/3600`, {
     'Cache-Control' : 'no-store'
   })
 
   task.expire(() => {
+    console.log('EXPIRED EVENT ON JS!')
+    report(<Assert key="expiration event invoked" expect={true} actual={true}/>)
     done()
-  })
-
-  task.catch((err) => {
-    console.log(err)
-  })
-
-  task.then((res) => {
-    console.log('resp response received', res.data.length)
-    // done()
   })
 
 })
