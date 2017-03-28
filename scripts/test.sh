@@ -41,6 +41,7 @@ cd "${TEST_APP_PATH}"
 npm install --save react-native-fetch-blob
 # libs that requires web API polyfills
 npm install --save firebase
+npm install --save crypto-js
 react-native link
 
 # copy android assets
