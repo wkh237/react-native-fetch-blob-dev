@@ -24,6 +24,15 @@ if [ $ACTION = "rm" ]; then
 	exit 0
 fi
 
+if [ $ACTION = "bump" ]; then
+	node -e "var fs = require('fs');\
+	var pkg = JSON.parse(fs.readFileSync('./package.json'));\
+	console.log('bump version',pkg.version, '->','${ISSUE_NUM}');\
+	pkg.version='${ISSUE_NUM}'; \
+	fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));"
+	exit 0
+fi
+
 if [ $ACTION = "go" ]; then
 	EXISTED=$(git branch | grep $ISSUE_NUM)
 	if [ "$EXISTED" == "" ]; then
