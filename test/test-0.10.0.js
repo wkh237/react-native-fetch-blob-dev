@@ -70,10 +70,10 @@ describe('json stream via fs', (report, done) => {
       return
       begin = Date.now()
       console.log(count);
-      // report(<Info key="report" uid="100">
-      //   <Text>{count} records</Text>
-      // </Info>)
-      // done()
+      report(<Info key="report" uid="100">
+        <Text>{count} records</Text>
+      </Info>)
+      done()
     })
   })
 })
@@ -137,7 +137,7 @@ describe('#171 appendExt verify', (report, done) => {
   .then(stat => {
     report(<Assert
       key="verify the file existence"
-      expect="23975"
+      expect={23975}
       actual={stat.size} />)
     done()
   })
@@ -155,7 +155,7 @@ describe('#173 issue with append option', (report, done) => {
   .then((stat) => {
     report(<Assert
       key="file size check #1"
-      expect="23975"
+      expect={23975}
       actual={stat.size}/>)
     return RNFetchBlob.config({
       path : dest,
@@ -167,7 +167,7 @@ describe('#173 issue with append option', (report, done) => {
   .then((stat) => {
     report(<Assert
       key="file size check #2"
-      expect="47950"
+      expect={47950}
       actual={stat.size}/>)
     return RNFetchBlob.config({
       path : dest,
@@ -179,7 +179,7 @@ describe('#173 issue with append option', (report, done) => {
   .then((stat) => {
     report(<Assert
       key="file size check #3"
-      expect="23975"
+      expect={23975}
       actual={stat.size}/>)
     return RNFetchBlob.config({
       path : dest,
@@ -190,7 +190,7 @@ describe('#173 issue with append option', (report, done) => {
   .then((stat) => {
     report(<Assert
       key="it should successfully overwrite existing file without config"
-      expect="23975"
+      expect={23975}
       actual={stat.size}/>)
     done()
   })

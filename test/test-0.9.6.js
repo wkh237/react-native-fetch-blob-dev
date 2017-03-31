@@ -53,7 +53,8 @@ describe('support #141 breakpoint download', (report, done) => {
     })
     .then(() => {
       RNFetchBlob.config({
-        path : dest + '?append=true'
+        path : dest,
+        overwrite : false
       })
       .fetch('GET', `${TEST_SERVER_URL}/public/github.png`, {
         'Cache-Control' : 'no-cache',
