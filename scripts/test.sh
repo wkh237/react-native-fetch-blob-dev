@@ -42,6 +42,7 @@ npm install --save react-native-fetch-blob
 # libs that requires web API polyfills
 npm install --save firebase
 npm install --save crypto-js
+npm install -save react-native-image-picker
 react-native link
 
 # copy android assets
