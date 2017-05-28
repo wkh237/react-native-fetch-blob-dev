@@ -10,8 +10,9 @@ import {
   Linking,
   Platform,
   Dimensions,
-  BackAndroid,
+  BackHandler,
   AsyncStorage,
+  AppState,
   Image,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker'
@@ -32,7 +33,25 @@ let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 let begin = Date.now()
 
 Platform.OS === 'android' &&
+describe('GetContentIntent should work correctly', (report, done) => {
+  let handler = (state) =>{
+    if(state === 'active') {
+      console.log('did not select any file, but all good.')
+      AppState.removeEventListener('change', handler)
+      done()
+    }
+  }
 
+  AppState.addEventListener('change', handler)
+
+  RNFetchBlob.android.getContentIntent().then((files) => {
+    console.log(files)
+    done()
+  })
+
+})
+
+Platform.OS === 'android' &&
 describe('Downlaod a file and add to Downlaods App (Android) ', (report, done) => {
 
   RNFetchBlob
