@@ -10,7 +10,6 @@ import {
   Text,
   View
 } from 'react-native';
-import Timer from 'react-timer-mixin';
 
 const HALF_RAD = Math.PI/2
 
@@ -130,11 +129,12 @@ export default class AnimateNumber extends Component {
 
     let progress = this.getAnimationProgress()
 
-    Timer.setTimeout(() => {
+    setTimeout(() => {
 
       let value = (this.endWith - this.startFrom)/this.props.steps
+      let sign = value >= 0 ? 1 : -1
       if(this.props.countBy)
-        value = Math.sign(value)*Math.abs(this.props.countBy)
+        value = sign*Math.abs(this.props.countBy)
       let total = parseFloat(this.state.value) + parseFloat(value)
 
       this.direction = (value > 0)
