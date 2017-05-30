@@ -1,4 +1,4 @@
-
+cd src
 git log --pretty="%an <%ae>" | sort |uniq > CONTRIBUTORS.md
 sed -i.bak '/xeiyan@gmail.com/d' ./CONTRIBUTORS.md
 rm CONTRIBUTORS.md.bak
@@ -8,7 +8,7 @@ echo "list contributors .."
 cat CONTRIBUTORS.md
 
 echo "update package.json .."
-
+cd ..
 node -e "var fs = require('fs');\
         var json = JSON.parse(fs.readFileSync('./package.json'));\
         var contributors = String(fs.readFileSync('./CONTRIBUTORS.md')).split(/[\r\n]/);\
