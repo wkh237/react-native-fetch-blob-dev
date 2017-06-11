@@ -22,7 +22,7 @@ const JSONStream = RNFetchBlob.JSONStream
 const fs = RNFetchBlob.fs
 const { Assert, Comparer, Info, prop } = RNTest
 const describe = RNTest.config({
-  group : '0.10.5',
+  group : '0.10.6',
   run : true,
   expand : true,
   timeout : 20000,
@@ -71,4 +71,77 @@ describe('Downlaod a file and add to Downlaods App (Android) ', (report, done) =
       done()
     })
 
+})
+
+describe('Cancel task works correctly', (report, done) => {
+  let task = RNFetchBlob.fetch('GET', 'http://ipv4.download.thinkbroadband.com/200MB.zip', {})
+  let last = -1
+  task.progress((current, total) => {
+    if(Date.now() - last < 1000)
+      return
+    last = Date.now()
+    console.log((current/total*100).toFixed(2) + '%')
+  })
+
+  task.then(() => {
+    report(<Assert key="cancel works correctly" expect={true} actual={false}/>)
+    done()
+  })
+  .catch(() => {
+    report(<Assert key="cancel works correctly" expect={true} actual={true}/>)
+    done()
+  })
+  setTimeout(() => {
+    task.cancel()
+  }, 4000)
+
+})
+
+
+describe('#370 upload, cancel, and progress in Fetch replacement', (report, done) => {
+  const Fetch = RNFetchBlob.polyfill.Fetch
+  // replace built-in fetch
+  MyFetch = new Fetch({
+      // enable this option so that the response data conversion handled automatically
+      auto : true,
+      // when receiving response data, the module will match its Content-Type header
+      // with strings in this array. If it contains any one of string in this array,
+      // the response body will be considered as binary data and the data will be stored
+      // in file system instead of in memory.
+      // By default, it only store response data to file system when Content-Type
+      // contains string `application/octet`.
+      binaryContentTypes : [
+          'image/',
+          'video/',
+          'audio/',
+          'foo/',
+      ]
+  }).build()
+  const formData = new FormData();
+  formData.append('key', '123123');
+  formData.append('acl', 'acl=123');
+  formData.append('Content-Type', 'formQQ');
+  formData.append('X-Amz-Credential', '123');
+  formData.append('X-Amz-Algorithm', 'AWS4-HMAC-SHA256');
+  formData.append('X-Amz-Date', '123');
+  formData.append('Policy', 'base64Policy');
+  formData.append('X-Amz-Signature', 'signature');
+  formData.append('file', 'file');
+  let task = MyFetch(`${TEST_SERVER_URL}/upload-form`, {
+    method : 'POST',
+    body : formData
+  })
+  console.log(task)
+  task.uploadProgress((current, total) => {
+    console.log('upload', current, total)
+  })
+  task.progress((current, total) => {
+    console.log('upload', current, total)
+  })
+  task.then((res) => {
+    return res.json()
+  })
+  .then((json) => {
+    console.log(json)
+  })
 })
