@@ -21,8 +21,8 @@ const { Assert, Comparer, Info, prop } = RNTest
 prop('FILENAME', `${Platform.OS}-0.10.0-${Date.now()}.png`)
 prop('TEST_SERVER_URL', 'http://localhost:8123')
 prop('TEST_SERVER_URL_SSL', 'https://localhost:8124')
-// prop('TEST_SERVER_URL', 'http://192.168.0.13:8123')
-// prop('TEST_SERVER_URL_SSL', 'https://192.168.0.13:8124')
+// prop('TEST_SERVER_URL', 'http://192.168.1.6:8123')
+// prop('TEST_SERVER_URL_SSL', 'https://192.168.1.6:8124')
 prop('DROPBOX_TOKEN', 'fsXcpmKPrHgAAAAAAAAAoXZhcXYWdgLpQMan6Tb_bzJ237DXhgQSev12hA-gUXt4')
 prop('styles', {
   image : {
@@ -87,7 +87,7 @@ describe('GET image from server', (report, done) => {
 // require('./test-0.5.2')
 // require('./test-0.6.0')
 // require('./test-0.6.2')
-// require('./test-0.7.0')
+require('./test-0.7.0')
 // require('./test-0.8.0')
 // require('./test-0.9.0')
 // require('./test-0.9.2')
@@ -99,7 +99,7 @@ describe('GET image from server', (report, done) => {
 // require('./test-0.10.2')
 // require('./test-0.10.3')
 // require('./test-0.10.5')
-require('./test-0.10.6')
+// require('./test-0.10.6')
 // require('./test-background.js')
 // require('./test-stream')
 // require('./test-fetch')

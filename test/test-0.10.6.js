@@ -73,7 +73,7 @@ describe('Downlaod a file and add to Downlaods App (Android) ', (report, done) =
 
 })
 
-describe('Cancel task works correctly', (report, done) => {
+false && describe('Cancel task works correctly', (report, done) => {
   let task = RNFetchBlob.fetch('GET', 'http://ipv4.download.thinkbroadband.com/200MB.zip', {})
   let last = -1
   task.progress((current, total) => {
@@ -98,7 +98,7 @@ describe('Cancel task works correctly', (report, done) => {
 })
 
 
-describe('#370 upload, cancel, and progress in Fetch replacement', (report, done) => {
+false && describe('#370 upload, cancel, and progress in Fetch replacement', (report, done) => {
   const Fetch = RNFetchBlob.polyfill.Fetch
   // replace built-in fetch
   MyFetch = new Fetch({
@@ -144,4 +144,33 @@ describe('#370 upload, cancel, and progress in Fetch replacement', (report, done
   .then((json) => {
     console.log(json)
   })
+})
+
+describe('inspect memory issue', (report, done) => {
+
+  const batch = () => {
+    let promises = []
+    for(let i=0;i<30;i++) {
+      let promise = RNFetchBlob.config({
+        fileCache : true
+      })
+      .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
+      .then((res) => fs.unlink(res.path()))
+      promises.push(promise)
+    }
+    return Promise.all(promises)
+  }
+
+  let p = Promise.resolve()
+  for(let i =0;i<30;i++) {
+    p = p.then(() => {
+      console.log('sending batch ->', i)
+      return batch()
+    })
+  }
+  p.then(() => {
+    report(<Assert key="memory test pased" expect={true} actual={true} />)
+    done()
+  })
+
 })
