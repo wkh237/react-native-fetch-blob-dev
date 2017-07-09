@@ -118,6 +118,7 @@ describe('HTTP error should not throw error event', (report, done) => {
   function onError(method, code) {
     let xhr = new XMLHttpRequest()
     xhr.open(method, `${TEST_SERVER_URL}/xhr-code/${code}`)
+    xhr.setRequestHeader('cache-control', 'no-store')
     xhr.onreadystatechange = function() {
       count++
       if(this.readyState == XMLHttpRequest.DONE) {
@@ -232,6 +233,7 @@ describe('upload progress event test', (report, done) => {
   let xhr = new XMLHttpRequest()
   let time = Date.now()
   let msg =  `time=${time}`
+  xhr.responseType = 'text'
   xhr.upload.onprogress = function(e) {
     report(
       <Assert key="event object is an instance of ProgressEvent"
@@ -240,17 +242,19 @@ describe('upload progress event test', (report, done) => {
   }
   xhr.onreadystatechange = function() {
     if(this.readyState == XMLHttpRequest.DONE) {
+      console.log(xhr.responseType)
+      console.log(xhr.response)
       report(
         <Assert key="reponse should correct"
-          expect={time}
-          actual={Math.floor(JSON.parse(xhr.response).time)}/>,
+          expect={msg}
+          actual={xhr.response}/>,
         <Assert key="responseType should correct"
-          expect={'json'}
+          expect={'text'}
           actual={xhr.responseType}/>)
         done()
     }
   }
-  xhr.open('POST', `${TEST_SERVER_URL}/upload`)
+  xhr.open('POST', `${TEST_SERVER_URL}/upload-body`)
   xhr.overrideMimeType('application/x-www-form-urlencoded')
   xhr.send(msg)
 

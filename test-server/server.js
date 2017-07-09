@@ -107,6 +107,18 @@ app.get('/video/:count', (req, res) => {
 
 })
 
+app.all('/upload-body', (req, res) => {
+  console.log(req.headers)
+  var body = ''
+  req.on('data', (chunk) => {
+    body += chunk
+  })
+  req.on('end', () => {
+    console.log(req.body)
+    res.send(body)
+  })
+})
+
 app.all('/upload', (req, res) => {
   console.log(req.headers)
   res.send(req.headers)
