@@ -3,7 +3,7 @@
 This repository is for developers who interested in modifying and improving [react-native-fetch-blob](https://github.com/wkh237/react-native-fetch-blob).
 
 ## Feature branch [v0.11.0](https://github.com/wkh237/react-native-fetch-blob/tree/0.11.0)
-## Bug fix branch [v0.10.7](https://github.com/wkh237/react-native-fetch-blob/tree/0.10.7)
+## Bug fix branch [v0.10.8](https://github.com/wkh237/react-native-fetch-blob/tree/0.10.8)
 
 ## prerequisites
 - node.js > 5.1.0
