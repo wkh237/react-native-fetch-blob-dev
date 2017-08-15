@@ -22,9 +22,9 @@ var JS_SOURCE_PATH = '../test/',
     APP_SOURCE_PATH = '../RNFetchBlobTest/'
 
 // watch test app source
-watch(JS_SOURCE_PATH, APP_SOURCE_PATH)
+watch(JS_SOURCE_PATH, APP_SOURCE_PATH, {ignored: /\.git\//})
 // watch lib js source
-watch(LIB_SOURCE_PATH, NODE_MODULE_MODULE_PATH, {ignored: /\.\.\/src\/(android|ios)\//})
+watch(LIB_SOURCE_PATH, NODE_MODULE_MODULE_PATH, {ignored: /\.git\/|\.\.\/src\/(android|ios)\//})
 
 // https
 var server = https.createServer({
@@ -293,22 +293,25 @@ function watch(source, dest, ignore) {
   chokidar
     .watch(source, ignore)
     .on('add', function(path) {
+      path = path.replace(/\\/g, '/');
       console.log(chalk.magenta('file created'), path)
       var targetPath = String(path).replace(source, dest)
       mkdirp(dirname(targetPath), function (err) {
-      if (err) return cb(err)
+        if (err) return cb(err)
         fs.writeFileSync(targetPath, fs.readFileSync(path))
       })
     })
     .on('change', function(path) {
+      path = path.replace(/\\/g, '/');
       console.log(chalk.green('file changed'), path)
       var targetPath = String(path).replace(source, dest)
       mkdirp(dirname(targetPath), function (err) {
-      if (err) return cb(err)
+        if (err) return cb(err)
         fs.writeFileSync(targetPath, fs.readFileSync(path))
       })
     })
     .on('unlink', function(path) {
+      path = path.replace(/\\/g, '/');
       console.log(chalk.red('file removed'), path)
       var targetPath = String(path).replace(source, dest)
       mkdirp(dirname(targetPath), function (err) {
