@@ -19,11 +19,16 @@ const { Assert, Comparer, Info, prop } = RNTest
 // test environment variables
 
 prop('FILENAME', `${Platform.OS}-0.10.0-${Date.now()}.png`)
-prop('TEST_SERVER_URL', 'http://localhost:8123')
-prop('TEST_SERVER_URL_SSL', 'https://localhost:8124')
-// prop('TEST_SERVER_URL', 'http://192.168.1.6:8123')
-// prop('TEST_SERVER_URL_SSL', 'https://192.168.1.6:8124')
-prop('DROPBOX_TOKEN', 'fsXcpmKPrHgAAAAAAAAAoXZhcXYWdgLpQMan6Tb_bzJ237DXhgQSev12hA-gUXt4')
+
+// prop('TEST_SERVER_URL', 'http://localhost:8123')
+// prop('TEST_SERVER_URL_SSL', 'https://localhost:8124')
+
+// When running in the Android emulator 10.0.2.2 is the IP to reach 127.0.0.1 of the host running the emulator
+// https://developer.android.com/studio/run/emulator-networking.html
+prop('TEST_SERVER_URL', 'http://10.0.2.2:8123')
+prop('TEST_SERVER_URL_SSL', 'https://10.0.2.2:8124')
+
+prop('DROPBOX_TOKEN', 'YOUR TOKEN HERE')
 prop('styles', {
   image : {
     width: Dimensions.get('window').width*0.9,
@@ -103,8 +108,8 @@ describe('GET image from server', (report, done) => {
 require('./test-0.10.7')
 // require('./test-background.js')
 // require('./test-stream')
-// require('./test-fetch')
-// require('./test-fs')
+require('./test-fetch')
+require('./test-fs')
 // require('./test-xmlhttp')
 // require('./test-blob')
 // require('./test-firebase')
