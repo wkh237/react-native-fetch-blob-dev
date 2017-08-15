@@ -72,7 +72,7 @@ app.get('/10s-download', (req,res) => {
   var data = ''
   for(var i =0;i<1024000;i++)
     data += '1'
-  res.set('Contet-Length', 1024000*10)
+  res.set('Content-Length', 1024000*10)
   var it = setInterval(() => {
     res.write(data)
     count++
