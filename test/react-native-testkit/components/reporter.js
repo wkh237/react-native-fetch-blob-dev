@@ -77,6 +77,8 @@ export default class Reporter extends Component {
           </View>
         </View>
         <ListView
+          // empty section headers: https://github.com/FaridSafi/react-native-gifted-listview/issues/39
+          enableEmptySections={true}
           style={[styles.container]}
           dataSource={this.ds}
           renderRow={this.renderTest.bind(this)}
