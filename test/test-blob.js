@@ -236,7 +236,7 @@ describe('#89 Blob.slice test', (report, done) => {
     Promise.all(testData.map(assert)).then(done)
   }
 
-  function assert(d):Promise {
+  function assert(d) {
     let content = d[0]
     let assertions = d[1]
     console.log('create blob content = ', content)
