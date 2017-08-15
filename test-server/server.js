@@ -22,9 +22,9 @@ var JS_SOURCE_PATH = '../test/',
     APP_SOURCE_PATH = '../RNFetchBlobTest/'
 
 // watch test app source
-watch(JS_SOURCE_PATH, APP_SOURCE_PATH, {ignored: /\.git\//})
+watch(JS_SOURCE_PATH, APP_SOURCE_PATH, {ignored: /\.git\/|_tmp___/})
 // watch lib js source
-watch(LIB_SOURCE_PATH, NODE_MODULE_MODULE_PATH, {ignored: /\.git\/|\.\.\/src\/(android|ios)\//})
+watch(LIB_SOURCE_PATH, NODE_MODULE_MODULE_PATH, {ignored: /\.git\/|_tmp___|\.\.\/src\/(android|ios)\//})
 
 // https
 var server = https.createServer({
