@@ -33,7 +33,6 @@ let begin = Date.now()
 
 
 false && describe('#287 content provider access issue', (report, done) => {
-
   Promise.resolve("content://com.rnfetchblobtest.provider/app_images/Pictures/image-c6f94579-a189-44da-9060-3fc9c613f354.jpg")
   .then((result) => {
     console.log(result)
@@ -46,12 +45,13 @@ false && describe('#287 content provider access issue', (report, done) => {
       source={{uri : `data:image/png;base64, ${image}`}}/>
   </Info>)
   })
-
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 describe('#296 Android Download Manager should not crash the app when status code is not 200', (report, done) => {
-
-
   RNFetchBlob.config({
     fileCache : true,
     addAndroidDownloads : {
@@ -61,14 +61,10 @@ describe('#296 Android Download Manager should not crash the app when status cod
   })
   .fetch('GET', `${TEST_SERVER_URL}/xhr-code/403`)
   .catch((err) => {
-    console.log(err)
-    report(<Assert key="Download manager throws error"
-      actual={true}
-      expect={true} />)
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
-
 
 describe('#236 removing Android download manager file', (report, done) => {
   let q = fs.dirs.DCIMDir + '/' + new Date().getTime() + '-test.png'
@@ -91,7 +87,8 @@ describe('#236 removing Android download manager file', (report, done) => {
     done()
   })
   .catch((err) => {
-    console.warn(err)
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
   })
 })
 
@@ -121,5 +118,8 @@ false && describe('#321 Android readstream performance', (report, done) => {
       done()
     })
   })
-
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })

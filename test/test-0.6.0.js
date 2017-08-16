@@ -37,13 +37,13 @@ let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 //   fs.writeFile(path, data)
 //     .then(() => fs.readFile(path, 'utf8'))
 //     .then((actual) => {
-//       report(<Assert key="utf8 content should correct" expect={data} actual={actual}/>)
+//       report(<Assert key="utf8 content should be correct" expect={data} actual={actual}/>)
 //       data = 'base64'
 //       return fs.writeFile(path, RNFetchBlob.base64.encode('base64'), 'base64')
 //     })
 //     .then(() => fs.readFile(path, 'base64'))
 //     .then((actual) => {
-//       report(<Assert key="base64 content should correct"
+//       report(<Assert key="base64 content should be correct"
 //         expect={RNFetchBlob.base64.decode(RNFetchBlob.base64.encode(data))}
 //         actual={RNFetchBlob.base64.decode(actual)}/>)
 //       data = 'ascii'
@@ -52,7 +52,7 @@ let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 //     .then(() => fs.readFile(path, 'ascii'))
 //     .then((actual) => {
 //       console.log(getASCIIArray(data), actual)
-//       report(<Assert key="ascii content should correct"
+//       report(<Assert key="ascii content should be correct"
 //         expect={getASCIIArray(data)}
 //         comparer={Comparer.equalToArray}
 //         actual={actual}/>)

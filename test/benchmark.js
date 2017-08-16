@@ -36,7 +36,7 @@ false && describe('upload BASE64 v.s. Storage', (report, done) => {
     .then((data) => {
       b64data = data
       report(
-        <Info key="test data should correct">
+        <Info key="test data should be correct">
           <Text>size of b64data = {data.length}</Text>
         </Info>)
       b64Test()

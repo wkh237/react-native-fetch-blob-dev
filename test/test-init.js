@@ -15,10 +15,10 @@ prop('TEST_SERVER_URL_SSL', 'https://localhost:8124')
 
 // When running in the Android emulator 10.0.2.2 is the IP to reach 127.0.0.1 of the host running the emulator
 // https://developer.android.com/studio/run/emulator-networking.html
-// prop('TEST_SERVER_URL', 'http://10.0.2.2:8123')
-// prop('TEST_SERVER_URL_SSL', 'https://10.0.2.2:8124')
+prop('TEST_SERVER_URL', 'http://10.0.2.2:8123')
+prop('TEST_SERVER_URL_SSL', 'https://10.0.2.2:8124')
 
-prop('DROPBOX_TOKEN', 'YOUR TOKEN HERE')
+prop('DROPBOX_TOKEN', 'hWW2IhwJ9GAAAAAAAAAADcCJVWvxfIjFDG8k8J5YSDrrszWka9k0RWyXDvFk8ybr')
 prop('styles', {
   image: {
     width: Dimensions.get('window').width*0.9,
@@ -84,14 +84,14 @@ describe('GET image from server', (report, done) => {
 
 // require('./test-0.1.x-0.4.x')
 // require('./test-0.5.1')
-// require('./test-0.5.2')
+// require('./test-0.5.2')  // pass
 // require('./test-0.6.0')  // is empty, its tests moved to test-fs.js
 // require('./test-0.6.2')
 // require('./test-0.7.0')
 // require('./test-0.8.0')
 // require('./test-0.9.0')
 // require('./test-0.9.2')
-// require('./test-0.9.4')
+require('./test-0.9.4')
 // require('./test-0.9.5')
 // require('./test-0.9.6')
 // require('./test-0.10.0')
@@ -103,7 +103,7 @@ describe('GET image from server', (report, done) => {
 // require('./test-0.10.7')
 // require('./test-background.js')
 // require('./test-stream')
-require('./test-fetch')
+// require('./test-fetch')
 // require('./test-fs')
 // require('./test-xmlhttp')
 // require('./test-blob')
