@@ -31,6 +31,15 @@ describe('writeFile and readFile test', (report, done) => {
   let path = dirs.DocumentDir + '/0.6.0-' + Date.now() + '/writeFileTest' + Date.now()
   let data = 'hellofrom' + Date.now()
 
+  // SETUP: make sure the test file does not yet exist so that we implicitly test that
+  // writeFile creates the file in that case (also fixes #483)
+  fs.exists(path)
+  .then((exists) => exists ? fs.unlink(path) : Promise.resolve())
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+
   fs.writeFile(path, data)
   .then(() => fs.readFile(path))
   .then((actual) => {
