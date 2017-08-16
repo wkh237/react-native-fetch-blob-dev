@@ -177,6 +177,12 @@ describe('create file API test', (report, done) => {
   let raw = 'hello ' + Date.now()
 
   fs.createFile(p, raw, 'utf8')
+  .then(() => fs.createFile(p, raw, 'utf8'))
+  .then(() => report(<Assert key="should have reported 'file exists'" expect={false} actual={true}/>))
+  .catch((err) => {
+    report(<Assert key="Already existing file should cause error" expect={'EEXIST'} actual={err.code}/>)
+  })
+
   .then(() => fs.readStream(p, 'utf8'))
   .then((stream) => {
     let d = ''
@@ -307,6 +313,7 @@ describe('unlink and mkdir API test', (report, done) => {
 describe('write stream API test', (report, done) => {
   let p = dirs.DocumentDir + '/write-stream' + Date.now()
   let expect = ''
+
   fs.createFile(p, '1234567890', 'utf8')
   .then(() => fs.writeStream(p, 'utf8', true))
   .then((ws) => {
