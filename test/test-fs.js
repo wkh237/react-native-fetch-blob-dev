@@ -233,8 +233,8 @@ describe('mkdir and isDir API test', (report, done) => {
   let p = dirs.DocumentDir + '/mkdir-test-' + Date.now()
 
   fs.mkdir(p)
-  .then((err) => {
-    report(<Assert key="folder should be created without error" expect={true} actual={err}/>)
+  .then((res) => {
+    report(<Assert key="folder should be created without error" expect={true} actual={res}/>)
   })
   .catch((err) => {
     report(<Assert key="should not have failed" expect={null} actual={err}/>)
@@ -260,7 +260,7 @@ describe('mkdir and isDir API test', (report, done) => {
 
   .then(() => fs.mkdir(p))
   .catch((err) => {
-    report(<Assert key="isDir should not work when folder exists" expect={'EEXIST'} actual={err.code}/>)
+    report(<Assert key="isDir should fail when folder exists" expect={'EEXIST'} actual={err.code}/>)
     done()
   })
 })
