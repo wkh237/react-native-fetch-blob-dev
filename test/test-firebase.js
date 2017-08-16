@@ -1,34 +1,24 @@
 import RNTest from './react-native-testkit/'
 import React from 'react'
 import RNFetchBlob from 'react-native-fetch-blob'
-import Timer from 'react-timer-mixin'
 import firebase from 'firebase'
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  CameraRoll,
-  Platform,
-  Dimensions,
-  Image,
-} from 'react-native';
+import {CameraRoll, Dimensions, Image, Platform, ScrollView, StyleSheet, Text, View,} from 'react-native';
 
 const fs = RNFetchBlob.fs
 
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = RNFetchBlob.polyfill.Blob
 
-const { Assert, Comparer, Info, prop } = RNTest
+const {Assert, Comparer, Info, prop} = RNTest
 const describe = RNTest.config({
-  group : 'firebase',
-  run : true,
-  expand : true,
-  timeout : 300000000,
+  group: 'firebase',
+  run: true,
+  expand: true,
+  timeout: 300000000,
 })
-const { TEST_SERVER_URL, TEST_SERVER_URL_SSL, DROPBOX_TOKEN, styles } = prop()
-const  dirs = RNFetchBlob.fs.dirs
+const {TEST_SERVER_URL, TEST_SERVER_URL_SSL, DROPBOX_TOKEN, styles} = prop()
+const dirs = RNFetchBlob.fs.dirs
 
 let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 let file = RNTest.prop('image')
@@ -45,9 +35,9 @@ describe('firebase login', (report, done) => {
 
   firebase.initializeApp(config);
   firebase.auth().signInWithEmailAndPassword('xeiyan@gmail.com', 'rnfbtest1024')
-    .catch((err) => {
-      console.log('firebase sigin failed', err)
-    })
+  .catch((err) => {
+    console.log('firebase sigin failed', err)
+  })
 
   firebase.auth().createUserWithEmailAndPassword('xeiyan@gmail.com', 'rnfbtest1024')
   .catch((err) => {
@@ -55,50 +45,63 @@ describe('firebase login', (report, done) => {
   });
 
   firebase.auth().onAuthStateChanged((user) => {
-    report(<Assert key="login status" uid="100"
-      expect={true}
-      actual={user !== null}/>,
-    <Info key="user content" uid="user data">
-      <Text>{JSON.stringify(user)}</Text>
-    </Info>)
+    report(
+      <Assert key="login status" uid="100"
+              expect={true}
+              actual={user !== null}/>,
+      <Info key="user content" uid="user data">
+        <Text>{JSON.stringify(user)}</Text>
+      </Info>
+    )
     if(user)
       done()
   })
 })
 
 describe('upload file to firebase', (report, done) => {
-
   let testImage = `firebase-test-${Platform.OS}-${Date.now()}.png`
   RNTest.prop('firebase-image', testImage)
 
   // create Blob from BASE64 data
-  Blob.build(RNTest.prop('image'), { type : 'image/png;BASE64'})
+  Blob.build(RNTest.prop('image'), {type: 'image/png;BASE64'})
   .then((blob) => {
     let storage = firebase.storage().ref('rnfbtest')
-    let task = storage
-      .child(RNTest.prop('firebase-image'))
-      .put(blob, { contentType : 'image/png' })
-      .then((snapshot) => {
-        console.log(snapshot.metadata)
-        report(<Assert key="upload success"
-          expect={true}
-          actual={true}/>,
-        <Info key="uploaded file stat" >
+    return storage
+    .child(RNTest.prop('firebase-image'))
+    .put(blob, {contentType: 'image/png'})
+    .then((snapshot) => {
+      console.log(snapshot.metadata)
+      report(
+        <Assert key="upload success"
+                expect={true}
+                actual={true}/>,
+        <Info key="uploaded file stat">
           <Text>{snapshot.totalBytes}</Text>
           <Text>{JSON.stringify(snapshot.metadata)}</Text>
-        </Info>)
-        done()
-      })
+        </Info>
+      )
+      done()
+    })
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
   })
 })
 
 describe('download firebase storage item', (report, done) => {
-  let storage = firebase.storage().ref('rnfbtest/' + RNTest.prop('firebase-image'))
-  storage.getDownloadURL().then((url) => {
+  let storage = firebase.storage().ref('rnfbtest/'+RNTest.prop('firebase-image'))
+
+  storage.getDownloadURL()
+  .then((url) => {
     console.log(url)
     report(<Info key="image viewer">
-      <Image style={styles.image} source={{uri : url}}/>
+      <Image style={styles.image} source={{uri: url}}/>
     </Info>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -107,38 +110,46 @@ let tier2FileName = `firebase-test-${Platform.OS}-github2.jpg`
 
 describe('upload using file path', (report, done) => {
   RNFetchBlob
-    .config({ fileCache : true, appendExt : 'jpg' })
-    .fetch('GET', `${TEST_SERVER_URL}/public/500k-img-dummy.jpg`)
-    .then((resp) => {
-      report(<Info key="test image">
-        <Image style={styles.image} source={{uri : prefix + resp.path()}}/>
-      </Info>)
-      return Blob.build(RNFetchBlob.wrap(resp.path()), { type : 'image/jpg' })
-    })
-    .then((blob) => {
-      return firebase.storage().ref('rnfbtest')
-        .child(tier2FileName)
-        .put(blob, { contentType : 'image/jpg' })
-    })
-    .then(() => {
-      report(<Assert key="upload finished" />)
-      done()
-    })
+  .config({fileCache: true, appendExt: 'jpg'})
+  .fetch('GET', `${TEST_SERVER_URL}/public/500k-img-dummy.jpg`)
+  .then((resp) => {
+    report(<Info key="test image">
+      <Image style={styles.image} source={{uri: prefix+resp.path()}}/>
+    </Info>)
+    return Blob.build(RNFetchBlob.wrap(resp.path()), {type: 'image/jpg'})
+  })
+  .then((blob) => {
+    return firebase.storage().ref('rnfbtest')
+    .child(tier2FileName)
+    .put(blob, {contentType: 'image/jpg'})
+  })
+  .then(() => {
+    report(<Assert key="upload finished"/>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 let directURL = null
 
 describe('verify uploaded file', (report, done) => {
-  firebase.storage().ref('rnfbtest/' + tier2FileName)
-    .getDownloadURL()
-    .then((url) => {
-      directURL = url
-      report(
-        <Info key="image viewer">
-          <Image style={styles.image} source={{uri : url}}/>
-        </Info>)
-      done()
-    })
+  firebase.storage().ref('rnfbtest/'+tier2FileName)
+  .getDownloadURL()
+  .then((url) => {
+    directURL = url
+    report(
+      <Info key="image viewer">
+        <Image style={styles.image} source={{uri: url}}/>
+      </Info>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 describe('download to base64', (report, done) => {
@@ -147,84 +158,94 @@ describe('download to base64', (report, done) => {
       <Info key="image data">
         <Image
           style={styles.image}
-          source={{uri : 'data:image/jpg;base64 ,'+ resp.base64()}}/>
+          source={{uri: 'data:image/jpg;base64 ,'+resp.base64()}}/>
       </Info>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
 
 describe('upload from storage', (report, done) => {
-  try {
-  let file = fs.dirs.DocumentDir + '/tempimg.png'
+  let file = fs.dirs.DocumentDir+'/tempimg.png'
+
   fs.writeFile(file, RNTest.prop('image'), 'base64')
-    .then(() => Blob.build(RNFetchBlob.wrap(file), {type : 'image/png'}))
-    .then((blob) => {
-      let storage = firebase.storage().ref('rnfbtest')
-      let task = storage
-        .child(`image-from-storage-${Platform.OS}-${Date.now()}.png`)
-        .put(blob, { contentType : 'image/png' })
-        .then((snapshot) => {
-          console.log(snapshot.metadata)
-          report(<Assert key="upload success"
-            expect={true}
-            actual={true}/>,
-          <Info key="uploaded file stat" >
-            <Text>{snapshot.totalBytes}</Text>
-            <Text>{JSON.stringify(snapshot.metadata)}</Text>
-          </Info>)
-          done()
-        })
+  .then(() => Blob.build(RNFetchBlob.wrap(file), {type: 'image/png'}))
+  .then((blob) => {
+    let storage = firebase.storage().ref('rnfbtest')
+    return storage
+    .child(`image-from-storage-${Platform.OS}-${Date.now()}.png`)
+    .put(blob, {contentType: 'image/png'})
+    .then((snapshot) => {
+      console.log(snapshot.metadata)
+      report(
+        <Assert key="upload success" expect={true} actual={true}/>,
+        <Info key="uploaded file stat">
+          <Text>{snapshot.totalBytes}</Text>
+          <Text>{JSON.stringify(snapshot.metadata)}</Text>
+        </Info>
+      )
+      done()
     })
-  }
-  catch(err) {
-    console.log(err)
-  }
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 Platform.OS === 'ios' && describe('upload from CameraRoll', (report, done) => {
-
-    CameraRoll.getPhotos({first : 10})
-    .then((resp) => {
-      let url = resp.edges[0].node.image.uri
-      console.log('CameraRoll',url)
-      return Blob.build(RNFetchBlob.wrap(url), {type:'image/jpg'})
-    })
-    .then((b) => {
-      blob = b
-      console.log('start upload ..')
-      return firebase.storage()
-        .ref('rnfbtest').child(`camra-roll-${Platform.OS}-${Date.now()}.jpg`)
-        .put(b, {contentType : 'image/jpg'})
-    })
-    .then((snapshot) => {
-      report(<Assert key="upload sucess" expect={true} actual={true}/>)
-      done()
-    })
+  CameraRoll.getPhotos({first: 10})
+  .then((resp) => {
+    let url = resp.edges[0].node.image.uri
+    console.log('CameraRoll', url)
+    return Blob.build(RNFetchBlob.wrap(url), {type: 'image/jpg'})
+  })
+  .then((b) => {
+    blob = b
+    console.log('start upload ..')
+    return firebase.storage()
+    .ref('rnfbtest').child(`camra-roll-${Platform.OS}-${Date.now()}.jpg`)
+    .put(b, {contentType: 'image/jpg'})
+  })
+  .then((snapshot) => {
+    report(<Assert key="upload sucess" expect={true} actual={true}/>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 
 Platform.OS === 'android' && describe('upload from CameraRoll', (report, done) => {
-
   let blob
   RNFetchBlob.config({
-      addAndroidDownloads : { useDownloadManager : true }
-    })
-    .fetch('GET', `${TEST_SERVER_URL}/public/1600k-img-dummy.jpg`)
-    .then((res) => CameraRoll.getPhotos({first : 10}))
-    .then((resp) => {
-      let url = resp.edges[0].node.image.uri
-      console.log('CameraRoll',url)
-      return Blob.build(RNFetchBlob.wrap(url), {type:'image/jpg'})
-    })
-    .then((b) => {
-      blob = b
-      return firebase.storage()
-        .ref('rnfbtest').child(`camra-roll-${Platform.OS}-${Date.now()}.jpg`)
-        .put(b, {contentType : 'image/jpg'})
-    })
-    .then((snapshot) => {
-      report(<Assert key="upload sucess" expect={true} actual={true}/>)
-      blob.close()
-      done()
-    })
+    addAndroidDownloads: {useDownloadManager: true}
+  })
+  .fetch('GET', `${TEST_SERVER_URL}/public/1600k-img-dummy.jpg`)
+  .then((res) => CameraRoll.getPhotos({first: 10}))
+  .then((resp) => {
+    let url = resp.edges[0].node.image.uri
+    console.log('CameraRoll', url)
+    return Blob.build(RNFetchBlob.wrap(url), {type: 'image/jpg'})
+  })
+  .then((b) => {
+    blob = b
+    return firebase.storage()
+    .ref('rnfbtest').child(`camra-roll-${Platform.OS}-${Date.now()}.jpg`)
+    .put(b, {contentType: 'image/jpg'})
+  })
+  .then((snapshot) => {
+    report(<Assert key="upload sucess" expect={true} actual={true}/>)
+    blob.close()
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })

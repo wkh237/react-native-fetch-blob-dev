@@ -77,7 +77,7 @@ describe('unsent state test', (report, done) => {
       <Assert key="response header should not be set"
         expect={null}
         actual={xhr.getResponseHeader('x-test')} />,
-      <Assert key="readyState should correct"
+      <Assert key="readyState should be correct"
         expect={XMLHttpRequest.UNSENT}
         actual={xhr.readyState} />
     )
@@ -245,10 +245,10 @@ describe('upload progress event test', (report, done) => {
       console.log(xhr.responseType)
       console.log(xhr.response)
       report(
-        <Assert key="reponse should correct"
+        <Assert key="reponse should be correct"
           expect={msg}
           actual={xhr.response}/>,
-        <Assert key="responseType should correct"
+        <Assert key="responseType should be correct"
           expect={'text'}
           actual={xhr.responseType}/>)
         done()

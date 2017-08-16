@@ -42,5 +42,4 @@ describe('background http response', (report, done) => {
     report(<Assert key="expiration event invoked" expect={true} actual={true}/>)
     done()
   })
-
 })

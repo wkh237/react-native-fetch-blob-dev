@@ -27,6 +27,93 @@ describe('Get storage folders', (report, done) => {
   done()
 })
 
+describe('writeFile and readFile test', (report, done) => {
+  let path = dirs.DocumentDir + '/0.6.0-' + Date.now() + '/writeFileTest' + Date.now()
+  let data = 'hellofrom' + Date.now()
+
+  // SETUP: make sure the test file does not yet exist so that we implicitly test that
+  // writeFile creates the file in that case (also fixes #483)
+  fs.exists(path)
+  .then((exists) => exists ? fs.unlink(path) : Promise.resolve())
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+
+  fs.writeFile(path, data)
+  .then(() => fs.readFile(path))
+  .then((actual) => {
+    report(<Assert key="utf8 content should be correct" expect={data} actual={actual}/>)
+    data = 'base64'
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+
+  .then(() => fs.writeFile(path, RNFetchBlob.base64.encode('base64'), 'base64'))
+  .then(() => fs.readFile(path, 'base64'))
+  .then((actual) => {
+    const expect = RNFetchBlob.base64.decode(RNFetchBlob.base64.encode(data))
+    report(<Assert key="base64 content should be correct" expect={expect} actual={RNFetchBlob.base64.decode(actual)}/>)
+    data = 'ascii'
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+
+  .then(() => fs.writeFile(path, getASCIIArray('ascii'), 'ascii'))
+  .then(() => fs.readFile(path, 'ascii'))
+  .then((actual) => {
+    console.log(getASCIIArray(data), actual)
+    report(<Assert key="ascii content should be correct" expect={getASCIIArray(data)} comparer={Comparer.equalToArray} actual={actual}/>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+})
+
+describe('append file test', (report, done) => {
+  let path = dirs.DocumentDir + '/append-test' + Date.now()
+  let content = 'test on ' + Date.now()
+
+  fs.writeFile(path, content, 'utf8')
+  .then(() => fs.appendFile(path, '100', 'utf8', true))
+  .then(() => fs.readFile(path, 'utf8'))
+  .then((data) => {
+    report(<Assert key="utf8 data should be appended" expect={content + '100'} actual={data}/>)
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+
+  .then(() => fs.appendFile(path, getASCIIArray('200'), 'ascii'))
+  .then(() => fs.readFile(path, 'ascii'))
+  .then((data) => {
+    report(<Assert key="ascii data should be appended" expect={getASCIIArray(content + '100' + '200')} comparer={Comparer.equalToArray} actual={data}/>)
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+
+  .then(() => fs.appendFile(path, RNFetchBlob.base64.encode('300'), 'base64'))
+  .then(() => fs.readFile(path, 'base64'))
+  .then((data) => {
+    const actual = RNFetchBlob.base64.decode(data)
+    report(<Assert key="base64 data should be appended" expect={content + '100' + '200' + '300'} actual={actual}/>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
+  })
+})
+
 describe('ls API test', (report, done) => {
   // Setup
   let p = dirs.DocumentDir + '/unlink-test-' + Date.now()
@@ -49,7 +136,7 @@ describe('ls API test', (report, done) => {
 
   // Test - File (error)
   .then(() => fs.ls(p))
-  .then((list) => {
+  .then(() => {
     report(<Assert key="should have failed" expect={false} actual={true}/>)
   })
   .catch((err) => {
@@ -88,7 +175,6 @@ describe('exists API test', (report, done) => {
 describe('create file API test', (report, done) => {
   let p = dirs.DocumentDir + '/test-' + Date.now()
   let raw = 'hello ' + Date.now()
-  let base64 = RNFetchBlob.base64.encode(raw)
 
   fs.createFile(p, raw, 'utf8')
   .then(() => fs.readStream(p, 'utf8'))
@@ -420,7 +506,7 @@ describe('ASCII data test', (report, done) => {
     })
     stream.onEnd(() => {
       res = res.map((byte) => String.fromCharCode(byte)).join('')
-      report(<Assert key="data written in ASCII format should correct" expect={expect + 'gg'} actual={res}/>)
+      report(<Assert key="data written in ASCII format should be correct" expect={expect + 'gg'} actual={res}/>)
       done()
     })
   })
@@ -509,7 +595,7 @@ describe('stat and lstat test', (report, done) => {
   })
 
   .then(() => fs.stat('13123132'))
-  .then((list) => {
+  .then(() => {
     report(<Assert key="should have failed" expect={false} actual={true}/>)
   })
   .catch((err) => {
@@ -670,7 +756,7 @@ describe('hash API test', (report, done) => {
   }
 })
 
-false && describe('binary data to ascii file size checking', (report, done) => {
+describe('binary data to ascii file size checking', (report, done) => {
   let file = null
   let expectedSize = 0
 
@@ -678,12 +764,12 @@ false && describe('binary data to ascii file size checking', (report, done) => {
   .fetch('GET', `${TEST_SERVER_URL}/public/beethoven.mp3`)
   .then((res) => {
     file = res.path()
-    return fs.stat(file)
   })
+  .then(() => fs.stat(file))
   .then((stat) => {
     expectedSize = Math.floor(stat.size)
-    return fs.readStream(file, 'ascii')
   })
+  .then(() => fs.readStream(file, 'ascii'))
   .then((stream) => {
     let actual = 0
     stream.open()
@@ -694,6 +780,10 @@ false && describe('binary data to ascii file size checking', (report, done) => {
       report(<Assert key="check mp3 file size" expect={expectedSize} actual={actual}/>)
       done()
     })
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
   })
 })
 
