@@ -18,7 +18,7 @@ prop('TEST_SERVER_URL_SSL', 'https://localhost:8124')
 // prop('TEST_SERVER_URL', 'http://10.0.2.2:8123')
 // prop('TEST_SERVER_URL_SSL', 'https://10.0.2.2:8124')
 
-prop('DROPBOX_TOKEN', 'YOURC TOKEN HERE')
+prop('DROPBOX_TOKEN', 'YOUR TOKEN HERE')
 prop('styles', {
   image: {
     width: Dimensions.get('window').width*0.9,
@@ -61,6 +61,7 @@ describe('#225 upload progress should fire correctly', (report, done) => {
   })
 })
 
+// REQUIRED TEST SETUP: Some tests, e.g. test-fetch.js, require this image
 describe('GET image from server', (report, done) => {
   RNFetchBlob
   .fetch('GET', `${TEST_SERVER_URL}/public/github.png`, {
@@ -102,8 +103,8 @@ describe('GET image from server', (report, done) => {
 // require('./test-0.10.7')
 // require('./test-background.js')
 // require('./test-stream')
-// require('./test-fetch')
-require('./test-fs')
+require('./test-fetch')
+// require('./test-fs')
 // require('./test-xmlhttp')
 // require('./test-blob')
 // require('./test-firebase')
