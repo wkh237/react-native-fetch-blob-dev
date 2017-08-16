@@ -747,7 +747,7 @@ describe('hash API test', (report, done) => {
   }
 })
 
-false && describe('binary data to ascii file size checking', (report, done) => {
+describe('binary data to ascii file size checking', (report, done) => {
   let file = null
   let expectedSize = 0
 
@@ -755,12 +755,12 @@ false && describe('binary data to ascii file size checking', (report, done) => {
   .fetch('GET', `${TEST_SERVER_URL}/public/beethoven.mp3`)
   .then((res) => {
     file = res.path()
-    return fs.stat(file)
   })
+  .then(() => fs.stat(file))
   .then((stat) => {
     expectedSize = Math.floor(stat.size)
-    return fs.readStream(file, 'ascii')
   })
+  .then(() => fs.readStream(file, 'ascii'))
   .then((stream) => {
     let actual = 0
     stream.open()
@@ -771,6 +771,10 @@ false && describe('binary data to ascii file size checking', (report, done) => {
       report(<Assert key="check mp3 file size" expect={expectedSize} actual={actual}/>)
       done()
     })
+  })
+  .catch((err) => {
+    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    done()
   })
 })
 
