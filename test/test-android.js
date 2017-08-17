@@ -2,24 +2,16 @@ import RNTest from './react-native-testkit/'
 import React from 'react'
 import RNFetchBlob from 'react-native-fetch-blob'
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Platform,
-  Dimensions,
-  Image,
-} from 'react-native';
+import {Dimensions, Image, Platform, ScrollView, StyleSheet, Text, View,} from 'react-native';
 
 const fs = RNFetchBlob.fs
-const { Assert, Comparer, Info, prop } = RNTest
+const {Assert, Comparer, Info, prop} = RNTest
 const describe = RNTest.config({
-  group : 'Android only functions',
-  run : Platform.OS === 'android',
-  expand : false,
+  group: 'Android only functions',
+  run: Platform.OS === 'android',
+  expand: false,
 })
-const { TEST_SERVER_URL, FILENAME, DROPBOX_TOKEN, styles } = prop()
+const {TEST_SERVER_URL, FILENAME, DROPBOX_TOKEN, styles} = prop()
 
 let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 
@@ -34,13 +26,13 @@ describe('Download with notification', (report, done) => {
 
   filePath = `${dirs.DownloadDir}/${filename}`
   RNFetchBlob.config({
-    path : filePath,
-    addAndroidDownloads : {
-      title : 'RNFetchBlob test download success',
-      description : `File description added by RNFetchblob`,
-      mediaScannable : true,
-      mime : "image/png",
-      notification : true
+    path: filePath,
+    addAndroidDownloads: {
+      title: 'RNFetchBlob test download success',
+      description: `File description added by RNFetchblob`,
+      mediaScannable: true,
+      mime: "image/png",
+      notification: true
     }
   })
   .fetch('GET', `${TEST_SERVER_URL}/public/github2.jpg`)
@@ -48,94 +40,100 @@ describe('Download with notification', (report, done) => {
     tmpFilePath = resp.path()
     report(<Info key={`image from ${tmpFilePath}`}>
       <Image
-        source={{ uri : prefix + tmpFilePath}}
+        source={{uri: prefix+tmpFilePath}}
         style={styles.image}/>
     </Info>)
     done()
   })
-
+  .catch((err) => {
+    report(<Assert key="'Download with notification' test should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
-describe('MediaScanner tests ', (report, done) => {
+describe('MediaScanner tests', (report, done) => {
   let filename = `scannable-test-${Date.now()}.png`
   let filePath = `${dirs.DownloadDir}/${filename}`
   RNFetchBlob.config({
-    path : filePath,
+    path: filePath,
   })
   .fetch('GET', `${TEST_SERVER_URL}/public/github2.jpg`)
   .then((resp) => {
     tmpFilePath = resp.path()
     return RNFetchBlob.fs.scanFile([
-      { path:resp.path() }
+      {path: resp.path()}
     ])
   })
   .then(() => {
     report(<Assert key={`scan image success, there should be a new file in Picture app named "${filename}"`} expect={true} actual={true}/>)
     return RNFetchBlob
-            .config({
-              path : dirs.DCIMDir + '/beethoven-'+ Date.now() +'.mp3'
-            })
-            .fetch('GET', `${TEST_SERVER_URL}/public/beethoven.mp3`)
+    .config({
+      path: dirs.DCIMDir+'/beethoven-'+Date.now()+'.mp3'
+    })
+    .fetch('GET', `${TEST_SERVER_URL}/public/beethoven.mp3`)
   })
   .then((resp) => {
     fs.scanFile([{
-      path : resp.path()
+      path: resp.path()
     }])
-    .then(() => {
-      report(<Assert
-        key={`scan mp3 file success, there exist a new file named "beethoven-${Date.now()}.mp3" in Music app`}
-        expect={true}
-        actual={true}/>)
-      done()
-    })
   })
-
+  .then(() => {
+    report(<Assert
+      key={`scan mp3 file success, there exist a new file named "beethoven-${Date.now()}.mp3" in Music app`}
+      expect={true}
+      actual={true}/>)
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="'MediaScanner tests' should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 describe('android download manager', (report, done) => {
   RNFetchBlob.config({
-    addAndroidDownloads : {
-      useDownloadManager : true,
-      title : 'RNFetchBlob test download manager test',
-      description : `File description added by RNFetchblob`,
-      mediaScannable : true,
-      notification : true
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      title: 'RNFetchBlob test download manager test',
+      description: `File description added by RNFetchblob`,
+      mediaScannable: true,
+      notification: true
     }
   })
-  .fetch('GET', `${TEST_SERVER_URL}/public/beethoven.mp3`).then((resp) => {
+  .fetch('GET', `${TEST_SERVER_URL}/public/beethoven.mp3`)
+  .then((resp) => {
     report(
       <Assert key="download manager complete handler" expect={true} actual={true}/>
     )
     return resp.readStream('ascii')
   })
   .then((stream) => {
-    stream.open();
     let len = 0
+    stream.open();
     stream.onData((chunk) => {
       len += chunk.length
     })
     stream.onEnd(() => {
-      report(
-        <Assert key="download manager URI is readable"
-          expect={len}
-          comparer={Comparer.greater}
-          actual={0}/>
-      )
+      report(<Assert key="download manager URI is readable" expect={len} comparer={Comparer.greater} actual={0}/>)
       done()
     })
   })
+  .catch((err) => {
+    report(<Assert key="'android download manager' test should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
-describe('open a file from intent', (report, done) => {
-  let url  = null
+describe('open a file from the Internet', (report, done) => {
+  let url = null
   RNFetchBlob.config({
-    addAndroidDownloads : {
-      useDownloadManager : true,
-      title : 'test-image',
-      description : 'open it from intent !',
-      mime : 'image/png',
-      mediaScannable : true,
-      notification : true,
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      title: 'test-image',
+      description: 'open it from intent !',
+      mime: 'image/png',
+      mediaScannable: true,
+      notification: true,
     }
   })
   .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
@@ -146,21 +144,24 @@ describe('open a file from intent', (report, done) => {
   .then(() => {
     done()
   })
+  .catch((err) => {
+    report(<Assert key="'open a file from the Internet' test should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 // #75
-describe('APK downloaded from Download Manager should correct', (report, done) => {
-
-  let url  = null
+describe('APK downloaded from Download Manager should be correct', (report, done) => {
+  let url = null
 
   RNFetchBlob.config({
-    addAndroidDownloads : {
-      useDownloadManager : true,
-      title : 'test-APK',
-      description : 'apk install file',
-      mime : 'application/vnd.android.package-archive',
-      mediaScannable : true,
-      notification : true,
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      title: 'test-APK',
+      description: 'apk install file',
+      mime: 'application/vnd.android.package-archive',
+      mediaScannable: true,
+      notification: true,
     }
   })
   .fetch('GET', `${TEST_SERVER_URL}/public/apk-dummy.apk`)
@@ -171,29 +172,35 @@ describe('APK downloaded from Download Manager should correct', (report, done) =
   .then(() => {
     done()
   })
-
+  .catch((err) => {
+    report(<Assert key="'APK downloaded from Download Manager' test should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 // issue #74
 describe('download file to specific location using DownloadManager', (report, done) => {
-  let dest = dirs.DCIMDir + '/android-download-test-' +Date.now() + '.png'
+  let dest = dirs.DCIMDir+'/android-download-test-'+Date.now()+'.png'
   RNFetchBlob.config({
-    addAndroidDownloads : {
-      useDownloadManager : true,
-      path : dest,
-      mime : 'image/png',
-      title : 'android-download-path-test.png',
-      description : 'download to specific path #74'
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      path: dest,
+      mime: 'image/png',
+      title: 'android-download-path-test.png',
+      description: 'download to specific path #74'
     }
   })
   .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
   .then((res) => fs.stat(res.path()))
   .then((stat) => {
     report(
-      <Assert key="file exists at the path"
-        expect={true} actual={true}/>,
-      <Assert key="file size correct"
-        expect="23975" actual={stat.size}/>)
+      <Assert key="file exists at the path" expect={true} actual={true}/>,
+      <Assert key="file size correct" expect={23975} actual={stat.size}/>
+    )
+    done()
+  })
+  .catch((err) => {
+    report(<Assert key="'download file to specific location using DownloadManager' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

@@ -86,7 +86,7 @@ describe('GET request test : path -> any', (report, done) => {
         return res.text()
       },
       (data) => {
-        report(<Assert key="content length should correct" expect={+contentLength} actual={data ? data.length : 0}/>)
+        report(<Assert key="content length should be correct" expect={+contentLength} actual={data ? data.length : 0}/>)
       },
       (err) => {
         console.warn(err, err.stack)

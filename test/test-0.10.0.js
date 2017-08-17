@@ -1,130 +1,127 @@
 import RNTest from './react-native-testkit/'
 import React from 'react'
 import RNFetchBlob from 'react-native-fetch-blob'
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Linking,
-  Platform,
-  Dimensions,
-  BackAndroid,
-  AsyncStorage,
-  Image,
-} from 'react-native';
+import {AsyncStorage, BackAndroid, Dimensions, Image, Linking, Platform, ScrollView, StyleSheet, Text, View,} from 'react-native';
 
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = RNFetchBlob.polyfill.Blob
 
 const JSONStream = RNFetchBlob.JSONStream
 const fs = RNFetchBlob.fs
-const { Assert, Comparer, Info, prop } = RNTest
+const {Assert, Comparer, Info, prop} = RNTest
 const describe = RNTest.config({
-  group : '0.10.0',
-  run : true,
-  expand : false,
-  timeout : 20000,
+  group: '0.10.0',
+  run: true,
+  expand: false,
+  timeout: 20000,
 })
-const { TEST_SERVER_URL, TEST_SERVER_URL_SSL, FILENAME, DROPBOX_TOKEN, styles } = prop()
+const {TEST_SERVER_URL, TEST_SERVER_URL_SSL, FILENAME, DROPBOX_TOKEN, styles} = prop()
 const dirs = RNFetchBlob.fs.dirs
 let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 let begin = Date.now()
 
 describe('json stream via HTTP', (report, done) => {
-
   let count = 0
   JSONStream(`${TEST_SERVER_URL}/public/json-dummy.json`).node('name', (name) => {
     count++
-    if(Date.now() - begin < 100)
-    return
+    if(Date.now()-begin < 100)
+      return
     begin = Date.now()
-    report(<Info key="report" uid="100">
-      <Text>{count} records</Text>
-    </Info>)
+    report(
+      <Info key="report 1" uid="100">
+        <Text>{count} records</Text>
+      </Info>
+    )
     done()
   })
-
 })
 
 describe('json stream via fs', (report, done) => {
-
   let fetch2 = new RNFetchBlob.polyfill.Fetch({
-    auto : true
+    auto: true
   })
   let res = null
   let count = 0
 
   RNFetchBlob.config({
-    fileCache : true
+    fileCache: true
   })
-  .fetch('GET',`${TEST_SERVER_URL}/public/json-dummy.json`)
+  .fetch('GET', `${TEST_SERVER_URL}/public/json-dummy.json`)
   .then((resp) => {
     res = resp
     JSONStream({
-      url : RNFetchBlob.wrap(res.path()),
-      headers : { bufferSize : 10240 }
+      url: RNFetchBlob.wrap(res.path()),
+      headers: {bufferSize: 10240}
     }).node('name', (name) => {
       count++
-      if(Date.now() - begin < 100)
-      return
+      if(Date.now()-begin < 100)
+        return
       begin = Date.now()
       console.log(count);
-      report(<Info key="report" uid="100">
-        <Text>{count} records</Text>
-      </Info>)
+      report(
+        <Info key="report 2" uid="100">
+          <Text>{count} records</Text>
+        </Info>
+      )
       done()
     })
+  })
+  .catch((err) => {
+    report(<Assert key="'json stream via fs'test should not have failed" expect={null} actual={err}/>)
+    done()
   })
 })
 
 
 describe('cookie test', (report, done) => {
   let time = Date.now()
+
   RNFetchBlob.fetch('GET', `${TEST_SERVER_URL}/cookie/${time}`)
   .then((res) => RNFetchBlob.net.getCookies(`${TEST_SERVER_URL}`))
   .then((cookies) => {
     let result = /cookieName\=[^;]+/.exec(cookies[0])
-    console.log(result, 'cookieName=' + time)
+    console.log(result, 'cookieName='+time)
     report(<Assert key="cookie should not be empty"
-      expect={'cookieName=' + time}
-      actual={result[0]}/>)
+                   expect={'cookieName='+time}
+                   actual={result[0]}/>)
     done()
   })
-
+  .catch((err) => {
+    report(<Assert key="'cookie test' should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 describe('SSL test #159', (report, done) => {
   RNFetchBlob.config({
-    trusty : true
-    })
-    .fetch('GET', `${TEST_SERVER_URL_SSL}/public/github.png`, {
-      'Cache-Control' : 'no-store'
-    })
-    .then(res => {
-      report(<Assert
-        key="trusty request should pass"
-        expect={true}
-        actual={true}/>)
-      return RNFetchBlob.fetch('GET',`${TEST_SERVER_URL_SSL}/public/github.png`)
-    })
-    .catch(e => {
-      report(<Assert
-        key="non-trusty request should not pass"
-        expect={true}
-        actual={true}/>)
-      done()
-    })
+    trusty: true
+  })
+  .fetch('GET', `${TEST_SERVER_URL_SSL}/public/github.png`, {
+    'Cache-Control': 'no-store'
+  })
+  .then(res => {
+    report(<Assert
+      key="trusty request should pass"
+      expect={true}
+      actual={true}/>)
+    return RNFetchBlob.fetch('GET', `${TEST_SERVER_URL_SSL}/public/github.png`)
+  })
+  .catch(e => {
+    report(<Assert
+      key="non-trusty request should not pass"
+      expect={true}
+      actual={true}/>)
+    done()
+  })
 })
 
 describe('#171 appendExt verify', (report, done) => {
-
   RNFetchBlob.config({
-    fileCache : true,
-    appendExt : 'png'
+    fileCache: true,
+    appendExt: 'png'
   })
   .fetch('GET', `${TEST_SERVER_URL}/public/github.png`, {
-    'Cache-Control' : 'no-store'
+    'Cache-Control': 'no-store'
   })
   .then(res => {
     console.log(res.path())
@@ -138,17 +135,21 @@ describe('#171 appendExt verify', (report, done) => {
     report(<Assert
       key="verify the file existence"
       expect={23975}
-      actual={stat.size} />)
+      actual={stat.size}/>)
     done()
   })
-
+  .catch((err) => {
+    report(<Assert key="'#171 appendExt verify' test should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 describe('#173 issue with append option', (report, done) => {
-  let dest = dirs.DocumentDir + '/tmp' + Date.now()
+  let dest = dirs.DocumentDir+'/tmp'+Date.now()
+
   RNFetchBlob.config({
-    path : dest,
-    overwrite : true
+    path: dest,
+    overwrite: true
   })
   .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
   .then((res) => fs.stat(res.path()))
@@ -158,8 +159,8 @@ describe('#173 issue with append option', (report, done) => {
       expect={23975}
       actual={stat.size}/>)
     return RNFetchBlob.config({
-      path : dest,
-      overwrite : false
+      path: dest,
+      overwrite: false
     })
     .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
   })
@@ -170,8 +171,8 @@ describe('#173 issue with append option', (report, done) => {
       expect={47950}
       actual={stat.size}/>)
     return RNFetchBlob.config({
-      path : dest,
-      overwrite : true
+      path: dest,
+      overwrite: true
     })
     .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
   })
@@ -182,7 +183,7 @@ describe('#173 issue with append option', (report, done) => {
       expect={23975}
       actual={stat.size}/>)
     return RNFetchBlob.config({
-      path : dest,
+      path: dest,
     })
     .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
   })
@@ -194,22 +195,25 @@ describe('#173 issue with append option', (report, done) => {
       actual={stat.size}/>)
     done()
   })
-
+  .catch((err) => {
+    report(<Assert key="'#173 issue with append option' test should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })
 
 describe('#171 verification ', (report, done) => {
-
   RNFetchBlob
-    .config({
-      session: 'SESSION_NAME',
-      fileCache: true,
-      appendExt: 'mp4'
-    })
-    .fetch('GET', `${TEST_SERVER_URL}/public/cat-fu.mp4`)
-    .then(res => {
-      console.log(res.path())
-    })
-
-
-
+  .config({
+    session: 'SESSION_NAME',
+    fileCache: true,
+    appendExt: 'mp4'
+  })
+  .fetch('GET', `${TEST_SERVER_URL}/public/cat-fu.mp4`)
+  .then(res => {
+    console.log(res.path())
+  })
+  .catch((err) => {
+    report(<Assert key="'#171 verification' test should not have failed" expect={null} actual={err}/>)
+    done()
+  })
 })

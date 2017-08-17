@@ -15,7 +15,7 @@ export default class Assert extends Component {
     expect : any,
     actual : any,
     desc : any,
-    compaer : () => bool
+    comparer : () => bool
   };
 
   constructor(props) {

@@ -73,7 +73,10 @@ let begin = Date.now()
 //       actual={cookies.length}/>)
 //     done()
 //   })
-//
+//   .catch((err) => {
+//     report(<Assert key="'#230 #249 cookies manipulation' test should not have failed" expect={null} actual={err}/>)
+//     done()
+//   })
 // })
 
 // describe('#254 IOS fs.stat lastModified date correction', (report, done) => {
@@ -115,7 +118,7 @@ let begin = Date.now()
 //
 // })
 //
-// describe('#264 network exceptions should be catachable', (report, done) => {
+// describe('#264 network exceptions should be catchable', (report, done) => {
 //
 //   let task = RNFetchBlob
 //   .config({ fileCache : true})
@@ -191,7 +194,6 @@ let begin = Date.now()
 // })
 
 describe('#293 the content type encoding suffix should be stripped', (report, done) => {
-
   let run = function(ctype, val) {
     return new Promise((resolve, reject) => {
       let header = {}
@@ -202,10 +204,7 @@ describe('#293 the content type encoding suffix should be stripped', (report, do
       })
       .then((res) => {
         console.log(ctype, val, res.json())
-        report(<Assert
-          key={`${ctype + val} srtipes correctly`}
-          expect="image/png"
-          actual={res.json()['content-type']}/>)
+        report(<Assert key={`${ctype + val} srtipes correctly`} expect="image/png" actual={res.json()['content-type']}/>)
         resolve()
       })
     })
@@ -216,9 +215,10 @@ describe('#293 the content type encoding suffix should be stripped', (report, do
     run('Content-Type', 'image/png;BASE64'),
     run('content-type', 'image/png;base64'),
     run('content-type', 'image/png;BASE64')
-  ]).then(() => {
+  ])
+  .then(() => done())
+  .catch((err) => {
+    report(<Assert key="'#293 the content type encoding suffix should be stripped' test should not have failed" expect={null} actual={err}/>)
     done()
   })
-
-
 })

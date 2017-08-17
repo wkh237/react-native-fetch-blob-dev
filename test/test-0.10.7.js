@@ -15,11 +15,7 @@ import {
   AppState,
   Image,
 } from 'react-native';
-import ImagePicker from 'react-native-image-picker'
 
-
-const JSONStream = RNFetchBlob.JSONStream
-const fs = RNFetchBlob.fs
 const { Assert, Comparer, Info, prop } = RNTest
 const describe = RNTest.config({
   group : '0.10.6',
@@ -33,7 +29,6 @@ let prefix = ((Platform.OS === 'android') ? 'file://' : '')
 let begin = Date.now()
 
 describe('HTTPS request should be cancellable when fileCache or path is set', (report, done) => {
-
   let task = RNFetchBlob
   .config({
     overwrite : true,
@@ -52,5 +47,4 @@ describe('HTTPS request should be cancellable when fileCache or path is set', (r
     report(<Assert key="task should be canceled" expect={true} actual={true}/>)
     done()
   })
-
 })
