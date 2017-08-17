@@ -73,7 +73,7 @@ describe('media scanner test #203', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'media scanner test #203' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

@@ -68,12 +68,12 @@ describe('support #141 breakpoint download', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'support #141 breakpoint download' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
 
-describe('support download/upload progress interval and division #140 ', (report, done) => {
+describe('support download/upload progress interval and division #140', (report, done) => {
   let tick = 0
   let records = []
   let last = Date.now()
@@ -100,7 +100,7 @@ describe('support download/upload progress interval and division #140 ', (report
   .then(() => upload())
   .then(() => done())
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'support download/upload progress interval and division #140' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 

@@ -79,7 +79,7 @@ describe('Upload and download large file', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload and download large file' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

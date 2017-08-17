@@ -34,7 +34,7 @@ describe('#227 IOS file modification date correctness', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#227 IOS file modification date correctness' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -49,7 +49,7 @@ describe('#230 add and option for setting if the request follow redirect or not'
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#230 add and option for setting if the request follow redirect or not' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -79,7 +79,7 @@ describe('#241 null header silent failed issue', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#241 null header silent failed issue' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -100,7 +100,7 @@ describe('#247 binary data UTF8 encoding causes app crash', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#247 bin. data test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -144,7 +144,7 @@ describe('#248 create blob from file has spaces in filename', (report, done) => 
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#248 create blob from file has spaces in filename' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

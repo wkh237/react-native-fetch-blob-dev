@@ -84,7 +84,7 @@ describe('upload file to firebase', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'upload file to firebase' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -101,7 +101,7 @@ describe('download firebase storage item', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'download firebase storage item' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -128,7 +128,7 @@ describe('upload using file path', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'upload using file path' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -147,7 +147,7 @@ describe('verify uploaded file', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'verify uploaded file' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -163,7 +163,7 @@ describe('download to base64', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'download to base64' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -191,7 +191,7 @@ describe('upload from storage', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'upload from storage' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -215,7 +215,7 @@ Platform.OS === 'ios' && describe('upload from CameraRoll', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'upload from CameraRoll (iOS)' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -245,7 +245,7 @@ Platform.OS === 'android' && describe('upload from CameraRoll', (report, done) =
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'upload from CameraRoll (Android)' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

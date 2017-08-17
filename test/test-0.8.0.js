@@ -50,7 +50,7 @@ describe('fs URI encoding support', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'fs URI encoding support' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -83,7 +83,7 @@ describe('regular request should have correct body', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'regular request should have correct body' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -108,7 +108,7 @@ describe('automatic content conversion test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'automatic content conversion test' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

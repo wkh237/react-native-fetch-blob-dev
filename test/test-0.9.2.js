@@ -36,7 +36,7 @@ describe('content-length header test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="content-length header test' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -75,7 +75,7 @@ describe('slice test', (report, done) => {
   })
   .then(() => done())
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'slice test' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -102,7 +102,7 @@ describe('Upload multipart/form-data', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload multipart/form-data' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -128,7 +128,7 @@ describe('app should not crash when sending formdata without data field', (repor
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'app should not crash when sending formdata without data field' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

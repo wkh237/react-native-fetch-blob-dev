@@ -46,12 +46,12 @@ describe('Download with notification', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Download with notification' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
 
-describe('MediaScanner tests ', (report, done) => {
+describe('MediaScanner tests', (report, done) => {
   let filename = `scannable-test-${Date.now()}.png`
   let filePath = `${dirs.DownloadDir}/${filename}`
   RNFetchBlob.config({
@@ -85,7 +85,7 @@ describe('MediaScanner tests ', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'MediaScanner tests' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -119,7 +119,7 @@ describe('android download manager', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'android download manager' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -145,7 +145,7 @@ describe('open a file from the Internet', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'open a file from the Internet' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -173,7 +173,7 @@ describe('APK downloaded from Download Manager should be correct', (report, done
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'APK downloaded from Download Manager' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -200,7 +200,7 @@ describe('download file to specific location using DownloadManager', (report, do
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'download file to specific location using DownloadManager' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

@@ -77,7 +77,7 @@ describe('cache control header and range request test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'cache control header and range request test' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -94,7 +94,7 @@ describe('#73 unicode response BASE64 content test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#73 unicode response BASE64 content test' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -109,13 +109,11 @@ describe('#73 unicode response content test', (report, done) => {
   .then((res) => res.readFile('utf8'))
   .then((data) => {
     report(
-      <Assert key="data should be correct"
-              expect={expect}
-              actual={data}/>)
+      <Assert key="data should be correct" expect={expect} actual={data}/>)
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#73 unicode response content test' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -140,7 +138,7 @@ describe('request should not retry after being timed out', (report, done) => {
     count++
   })
   .catch((err) => {
-    report(<Assert key="task.cancel hould not have failed" expect={null} actual={err}/>)
+    report(<Assert key="task.cancel should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -168,7 +166,7 @@ describe('long live download or upload task won\'t timeout', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'long live download or upload task won\'t timeout' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

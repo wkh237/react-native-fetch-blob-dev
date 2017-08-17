@@ -29,7 +29,7 @@ describe('The check if it follows 301/302 redirection', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'The check if it follows 301/302 redirection' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -48,7 +48,7 @@ describe('Upload octet-stream image to Dropbox', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload octet-stream image to Dropbox' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -73,7 +73,7 @@ describe('Upload multipart/form-data', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload multipart/form-data' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -94,7 +94,7 @@ describe('Compare uploaded multipart image', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Compare uploaded multipart image' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -121,7 +121,7 @@ describe('Progress report test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Progress report test' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -151,7 +151,7 @@ describe('PUT request test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'PUT request test' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -164,7 +164,7 @@ describe('DELETE request test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'DELETE request test' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

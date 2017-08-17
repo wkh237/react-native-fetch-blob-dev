@@ -33,7 +33,7 @@ describe('create Blob from string', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'create Blob from string'test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -57,7 +57,7 @@ describe('create blob from BASE64 encoded data', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'create blob from BASE64 encoded data' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -82,12 +82,12 @@ describe('create blob from file', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'create blob from file' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
 
-describe('create Blob without any agument', (report, done) => {
+describe('create Blob without any argument', (report, done) => {
   Blob.build().then((b) => fs.stat(b.getRNFetchBlobRef()))
   .then((stat) => {
     report(
@@ -104,7 +104,7 @@ describe('create Blob without any agument', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'create Blob without any argument' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -133,7 +133,7 @@ describe('blob clear cache test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'blob clear cache test' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -170,7 +170,7 @@ describe('create blob using FormData', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'create blob using FormData' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -195,7 +195,7 @@ describe('#89 Blob.slice test', (report, done) => {
     startTest()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#89 Blob.slice test' setup should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -259,7 +259,7 @@ describe('#89 Blob.slice test', (report, done) => {
     Promise.all(testData.map(assert))
     .then(done)
     .catch((err) => {
-      report(<Assert key="should not have failed" expect={null} actual={err}/>)
+      report(<Assert key="'#89 Blob.slice test' should not have failed" expect={null} actual={err}/>)
       done()
     })
   }
@@ -285,7 +285,7 @@ describe('#89 Blob.slice test', (report, done) => {
               report(<Assert key={`assertion ${++count}`} expect={this.contents} actual={actual}/>)
             }.bind(args))
             .catch((err) => {
-              report(<Assert key="should not have failed" expect={null} actual={err}/>)
+              report(<Assert key="'#89 Blob.slice test' assert function should not have failed" expect={null} actual={err}/>)
               done()
             })
           })

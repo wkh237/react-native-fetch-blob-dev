@@ -39,7 +39,7 @@ describe('issue #105', (report, done) => {
   })
   .then((res) => done())
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#105 test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -56,7 +56,7 @@ describe('issue #106', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#106 test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -79,7 +79,7 @@ describe('issue #111 get redirect destination', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#111 test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -104,7 +104,7 @@ describe('chunked encoding option test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'chunked encoding option test' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -166,19 +166,19 @@ describe('#118 readStream performance prepare the file', (report, done) => {
             done()
           })
           .catch((err) => {
-            report(<Assert key="should not have failed" expect={null} actual={err}/>)
+            report(<Assert key="#118 stream.onEnd should not have failed" expect={null} actual={err}/>)
             done()
           })
         })
       })
       .catch((err) => {
-        report(<Assert key="should not have failed" expect={null} actual={err}/>)
+        report(<Assert key="#118 read stream should not have failed" expect={null} actual={err}/>)
         done()
       })
     }
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#118 should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -194,7 +194,7 @@ describe('issue #120 upload progress should work when sending body as-is', (repo
   }, data)
 
   task.catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#120 task should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -212,7 +212,7 @@ describe('issue #120 upload progress should work when sending body as-is', (repo
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#120 uploadProgress should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

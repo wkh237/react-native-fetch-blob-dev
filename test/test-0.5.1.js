@@ -36,7 +36,7 @@ describe('Download file to storage with custom file extension', (report, done) =
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Download file to storage with custom file extension' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -67,7 +67,7 @@ describe('Read cached file via file stream', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Read cached file via file stream' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -86,7 +86,7 @@ describe('File stream reader error should be able to handled', (report, done) =>
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'File stream reader error should be able to handled' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -119,7 +119,7 @@ describe('Upload from file storage', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload from file storage' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -152,7 +152,7 @@ describe('Upload multipart data with file from storage', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload multipart data with file from storage' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -191,7 +191,7 @@ describe('Upload and download at the same time', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload and download at the same time' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -231,7 +231,7 @@ describe('Session create mechanism test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Session create mechanism test' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -294,7 +294,7 @@ describe('Session API CRUD test', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Session API CRUD test' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

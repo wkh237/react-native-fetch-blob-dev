@@ -27,9 +27,11 @@ describe('json stream via HTTP', (report, done) => {
     if(Date.now()-begin < 100)
       return
     begin = Date.now()
-    report(<Info key="report" uid="100">
-      <Text>{count} records</Text>
-    </Info>)
+    report(
+      <Info key="report" uid="100">
+        <Text>{count} records</Text>
+      </Info>
+    )
     done()
   })
 })
@@ -63,7 +65,7 @@ describe('json stream via fs', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'json stream via fs'test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -83,7 +85,7 @@ describe('cookie test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'cookie test' should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -135,7 +137,7 @@ describe('#171 appendExt verify', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#171 appendExt verify' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -192,7 +194,7 @@ describe('#173 issue with append option', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#173 issue with append option' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -209,7 +211,7 @@ describe('#171 verification ', (report, done) => {
     console.log(res.path())
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#171 verification' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

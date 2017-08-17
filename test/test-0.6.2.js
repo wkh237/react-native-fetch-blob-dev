@@ -52,7 +52,7 @@ describe('upload asset from camera roll', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'upload asset from camera roll' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -85,7 +85,7 @@ describe('Upload multipart data with file from CameraRoll', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Upload multipart data with file from CameraRoll' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -111,7 +111,7 @@ describe('access assets from camera roll', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'access assets from camera roll' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -136,7 +136,7 @@ describe('read asset in app bundle', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'read asset in app bundle' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -150,7 +150,7 @@ describe('stat assets in app', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'stat assets in app' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -177,7 +177,7 @@ describe('copy asset', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'copy asset' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -201,7 +201,7 @@ describe('upload file from assets', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'upload file from assets' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -235,7 +235,7 @@ describe('Check custom MIME type correctness', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Check custom MIME type correctness' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

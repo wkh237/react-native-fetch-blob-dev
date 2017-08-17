@@ -40,7 +40,7 @@ describe('GET request with params', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'GET request with params' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -81,7 +81,7 @@ describe('POST request with params', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'POST request with params' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

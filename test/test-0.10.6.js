@@ -33,12 +33,12 @@ Platform.OS === 'android' && describe('GetContentIntent should work correctly', 
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'GetContentIntent should work correctly (Android)' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
 
-Platform.OS === 'android' && describe('Downlaod a file and add to Downlaods App (Android) ', (report, done) => {
+Platform.OS === 'android' && describe('Downlaod a file and add to Downlaods App (Android)', (report, done) => {
   RNFetchBlob
   .config({path: dirs.DocumentDir+'/github'+new Date()+'.png'})
   .fetch('GET', `${TEST_SERVER_URL}/public/github.png`)
@@ -56,7 +56,7 @@ Platform.OS === 'android' && describe('Downlaod a file and add to Downlaods App 
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'Downlaod a file and add to Downlaods App (Android)' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -134,7 +134,7 @@ false && describe('#370 upload, cancel, and progress in Fetch replacement', (rep
     console.log(json)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#370 test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -165,7 +165,7 @@ describe('inspect memory issue', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="memory issue test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

@@ -74,7 +74,7 @@ let begin = Date.now()
 //     done()
 //   })
 //   .catch((err) => {
-//     report(<Assert key="should not have failed" expect={null} actual={err}/>)
+//     report(<Assert key="'#230 #249 cookies manipulation' test should not have failed" expect={null} actual={err}/>)
 //     done()
 //   })
 // })
@@ -204,10 +204,7 @@ describe('#293 the content type encoding suffix should be stripped', (report, do
       })
       .then((res) => {
         console.log(ctype, val, res.json())
-        report(<Assert
-          key={`${ctype + val} srtipes correctly`}
-          expect="image/png"
-          actual={res.json()['content-type']}/>)
+        report(<Assert key={`${ctype + val} srtipes correctly`} expect="image/png" actual={res.json()['content-type']}/>)
         resolve()
       })
     })
@@ -221,7 +218,7 @@ describe('#293 the content type encoding suffix should be stripped', (report, do
   ])
   .then(() => done())
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#293 the content type encoding suffix should be stripped' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

@@ -67,7 +67,7 @@ describe('#129 memory leaking when enable uploadProgress', (report, done) => {
     }
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'#129 memory leaking when enable uploadProgress' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
