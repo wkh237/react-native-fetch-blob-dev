@@ -28,15 +28,17 @@ describe('#143 streaming', (report, done) => {
   .part((chunk) => {
     console.log('part', ++count, chunk.length)
     last = chunk
-    report(<Info key="stream viewr" uid="100">
-      <Image key="frame" style={{height: 256, width: 256}} source={{uri: 'data:image/jpeg;base64,'+chunk}}/>
-    </Info>)
+    report(
+      <Info key="stream viewr" uid="100">
+        <Image key="frame" style={{height: 256, width: 256}} source={{uri: 'data:image/jpeg;base64,'+chunk}}/>
+      </Info>
+    )
   })
   .then((res) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="#143 streaming test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })

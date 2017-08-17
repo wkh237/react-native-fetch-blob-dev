@@ -36,18 +36,35 @@ describe('writeFile and readFile test', (report, done) => {
   fs.exists(path)
   .then((exists) => exists ? fs.unlink(path) : Promise.resolve())
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="setup should not have failed" expect={null} actual={err}/>)
     done()
   })
 
-  fs.writeFile(path, data)
+  .then(() => fs.readFile(path))
+  .then(() => report(<Assert key="should have reported 'file not found'" expect={false} actual={true}/>))
+  .catch((err) => {
+    report(<Assert key="Non-existing file should cause error" expect={'ENOENT'} actual={err.code}/>)
+  })
+
+  .then(() => fs.readFile(dirs.DocumentDir))
+  .then(() => report(<Assert key="should have reported 'is a directory'" expect={false} actual={true}/>))
+  .catch((err) => {
+    report(
+      <Assert key="is-a-directory test error" expect={'EISDIR'} actual={err.code}/>,
+      <Info key="error message">
+        <Text>{String(err)}</Text>
+      </Info>
+    )
+  })
+
+  .then(() => fs.writeFile(path, data))
   .then(() => fs.readFile(path))
   .then((actual) => {
-    report(<Assert key="utf8 content should be correct" expect={data} actual={actual}/>)
+    report(<Assert key="utf8 contents should be correct" expect={data} actual={actual}/>)
     data = 'base64'
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="utf8 contents check should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -55,11 +72,11 @@ describe('writeFile and readFile test', (report, done) => {
   .then(() => fs.readFile(path, 'base64'))
   .then((actual) => {
     const expect = RNFetchBlob.base64.decode(RNFetchBlob.base64.encode(data))
-    report(<Assert key="base64 content should be correct" expect={expect} actual={RNFetchBlob.base64.decode(actual)}/>)
+    report(<Assert key="base64 contents should be correct" expect={expect} actual={RNFetchBlob.base64.decode(actual)}/>)
     data = 'ascii'
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="base64 contents check should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -67,11 +84,11 @@ describe('writeFile and readFile test', (report, done) => {
   .then(() => fs.readFile(path, 'ascii'))
   .then((actual) => {
     console.log(getASCIIArray(data), actual)
-    report(<Assert key="ascii content should be correct" expect={getASCIIArray(data)} comparer={Comparer.equalToArray} actual={actual}/>)
+    report(<Assert key="ascii contents should be correct" expect={getASCIIArray(data)} comparer={Comparer.equalToArray} actual={actual}/>)
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="ascii contents check should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -87,7 +104,7 @@ describe('append file test', (report, done) => {
     report(<Assert key="utf8 data should be appended" expect={content + '100'} actual={data}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="utf8 data check should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -97,7 +114,7 @@ describe('append file test', (report, done) => {
     report(<Assert key="ascii data should be appended" expect={getASCIIArray(content + '100' + '200')} comparer={Comparer.equalToArray} actual={data}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="ascii data check should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -109,7 +126,7 @@ describe('append file test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="base64 data check should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -130,14 +147,14 @@ describe('ls API test', (report, done) => {
     report(<Assert key="result must be an Array" expect={true} actual={Array.isArray(list)}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="array result check should not have failed" expect={null} actual={err}/>)
     done()
   })
 
   // Test - File (error)
   .then(() => fs.ls(p))
   .then(() => {
-    report(<Assert key="should have failed" expect={false} actual={true}/>)
+    report(<Assert key="ls of file should have failed" expect={false} actual={true}/>)
   })
   .catch((err) => {
     report(<Assert key="File instead of directory should fail" expect={'ENODIR'} actual={err.code}/>)
@@ -157,7 +174,7 @@ describe('exists API test', (report, done) => {
     report(<Assert key="document dir should exist" expect={true} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="dir existence check should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -167,7 +184,7 @@ describe('exists API test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="path existence check should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -200,7 +217,7 @@ describe('create file API test', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="creatFile API tests should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -223,7 +240,7 @@ describe('create file API test', (report, done) => {
       })
     })
     .catch((err) => {
-      report(<Assert key="should not have failed" expect={null} actual={err}/>)
+      report(<Assert key="base64 createFile API tests should not have failed" expect={null} actual={err}/>)
       done()
     })
   }
@@ -237,7 +254,7 @@ describe('mkdir and isDir API test', (report, done) => {
     report(<Assert key="folder should be created without error" expect={true} actual={res}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="mkdir should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -246,7 +263,7 @@ describe('mkdir and isDir API test', (report, done) => {
     report(<Assert key="mkdir should work correctly" expect={true} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="exists should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -255,7 +272,7 @@ describe('mkdir and isDir API test', (report, done) => {
     report(<Assert key="isDir should work correctly" expect={true} actual={isDir}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="isDir should not have failed" expect={null} actual={err}/>)
   })
 
   .then(() => fs.mkdir(p))
@@ -274,7 +291,7 @@ describe('unlink and mkdir API test', (report, done) => {
     report(<Assert key="file created" expect={true} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="file creation should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -284,7 +301,7 @@ describe('unlink and mkdir API test', (report, done) => {
     report(<Assert key="file removed" expect={false} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="file removal should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -294,7 +311,7 @@ describe('unlink and mkdir API test', (report, done) => {
     report(<Assert key="mkdir should success" expect={true} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="making of directory should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -305,7 +322,7 @@ describe('unlink and mkdir API test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="removal of directory should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -340,7 +357,7 @@ describe('write stream API test', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="write stream API tests should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -370,7 +387,7 @@ describe('write stream API test', (report, done) => {
       })
     })
     .catch((err) => {
-      report(<Assert key="should not have failed" expect={null} actual={err}/>)
+      report(<Assert key="base64 write stream API tests should not have failed" expect={null} actual={err}/>)
       done()
     })
   }
@@ -389,7 +406,7 @@ describe('mv API test', {timeout: 10000}, (report, done) => {
     report(<Assert key="file should not exist in old path" expect={false} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'file should not exist in old path' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -398,16 +415,16 @@ describe('mv API test', {timeout: 10000}, (report, done) => {
     report(<Assert key="file should be moved to destination" expect={true} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'file should be moved' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 
   .then(() => fs.ls(dest))
   .then((files) => {
-    report(<Assert key="file name should be correct" expect={'moved'} actual={files[0]}/>)
+    report(<Assert key="file name for mv-to-dest should be correct" expect={'moved'} actual={files[0]}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'file name for mv-to-dest should be correct' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -423,12 +440,12 @@ describe('mv API test', {timeout: 10000}, (report, done) => {
       report(<Assert key="Error" expect={null} actual={err}/>)
     })
     stream.onEnd(() => {
-      report(<Assert key="file content should be correct" expect={content} actual={actual}/>)
+      report(<Assert key="moved file content should be correct" expect={content} actual={actual}/>)
       done()
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'moved file content should be correct' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -446,16 +463,16 @@ describe('cp API test', {timeout: 10000}, (report, done) => {
     report(<Assert key="file should be copy to destination" expect={true} actual={exist}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'file should be copy to destination' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 
   .then(() => fs.ls(dest))
   .then((files) => {
-    report(<Assert key="file name should be correct" expect={'cp'} actual={files[0]}/>)
+    report(<Assert key="file name for cp-to-test should be correct" expect={'cp'} actual={files[0]}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'file name for cp-to-test should be correct' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -471,12 +488,12 @@ describe('cp API test', {timeout: 10000}, (report, done) => {
       report(<Assert key="Error" expect={null} actual={err}/>)
     })
     stream.onEnd(() => {
-      report(<Assert key="file content should be correct" expect={content} actual={actual}/>)
+      report(<Assert key="copied file content should be correct" expect={content} actual={actual}/>)
       done()
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'copied file content should be correct' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -496,7 +513,7 @@ describe('ASCII data test', (report, done) => {
     return Promise.all(promises).then(() => stream.close())
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="writing ASCII data stream should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -518,7 +535,7 @@ describe('ASCII data test', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="reading ASCII data stream should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -547,7 +564,7 @@ describe('ASCII file test', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="ASCII data varification should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -573,7 +590,7 @@ describe('format conversion', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'write utf8 and read by ascii' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -584,26 +601,26 @@ describe('stat and lstat test', (report, done) => {
 
   fs.lstat(dirs.DocumentDir)  // stat a folder
   .then((stat) => {
-    report(<Assert key="result should be an array" expect={true} actual={Array.isArray(stat)}/>)
+    report(<Assert key="lstat result should be an array" expect={true} actual={Array.isArray(stat)}/>)
     file = stat[0].path
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'lstat result should be an array' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 
   .then(() => fs.stat(file))  // stat a file
   .then((stat) => {
-    report(<Assert key="should have properties" expect={expect} comparer={Comparer.hasProperties} actual={stat}/>)
+    report(<Assert key="stat of file should have properties" expect={expect} comparer={Comparer.hasProperties} actual={stat}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="'stat of file should have properties' test should not have failed" expect={null} actual={err}/>)
     done()
   })
 
   .then(() => fs.stat('13123132'))
   .then(() => {
-    report(<Assert key="should have failed" expect={false} actual={true}/>)
+    report(<Assert key="stat of invalid file should have failed" expect={false} actual={true}/>)
   })
   .catch((err) => {
     report(<Assert key="stat of non-existent file should fail" expect={true} actual={true}/>)
@@ -674,7 +691,7 @@ describe('fs.slice test', (report, done) => {
     done()
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="fs.slice test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
@@ -699,7 +716,7 @@ describe('hash API test', (report, done) => {
     report(<Assert key="MD5 hash of text file should be created" expect={'3fce512da59b4abda4c5f37ef7859443'} actual={hash}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="md5 of text file should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -708,7 +725,7 @@ describe('hash API test', (report, done) => {
     report(<Assert key="SHA-256 hash of text file should be created" expect={'92fc68e5477e96c2beac69237bb8449350a358bd5a6fe578d1b374814b1f4486'} actual={hash}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="sha256 of text file should not have failed" expect={null} actual={err}/>)
     done()
   })
 
@@ -717,13 +734,17 @@ describe('hash API test', (report, done) => {
     report(<Assert key="MD5 hash of binary file should be created" expect={'c7e6697f842252de45eb70eb6314987a'} actual={hash}/>)
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="md5 of binary file should not have failed" expect={null} actual={err}/>)
     done()
   })
 
   .then(() => fs.hash(binFile, 'sha256'))
   .then((hash) => {
     report(<Assert key="SHA-256 hash of binary file should be created" expect={'ffb5be2160cc5d594378a71e187ccfe06b0829877721e285669c01467c175ca7'} actual={hash}/>)
+  })
+  .catch((err) => {
+    report(<Assert key="sha256 of binary file should not have failed" expect={null} actual={err}/>)
+    done()
   })
 
   .then(() => invalidFilenameCheck())
@@ -734,13 +755,13 @@ describe('hash API test', (report, done) => {
 
   .then(() => done())
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="hash API tests should not have failed" expect={null} actual={err}/>)
     done()
   })
 
   function invalidFilenameCheck () {
     return fs.hash('INVALID_FILE', 'sha256')
-    .then(() => report(<Assert key="should have reported 'file not found'" expect={false} actual={true}/>))
+    .then(() => report(<Assert key="should have reported 'INVALID_FILE file not found'" expect={false} actual={true}/>))
     .catch((err) => {
       report(<Assert key="Non-existing file should cause error" expect={'ENOENT'} actual={err.code}/>)
     })
@@ -789,7 +810,7 @@ describe('binary data to ascii file size checking', (report, done) => {
     })
   })
   .catch((err) => {
-    report(<Assert key="should not have failed" expect={null} actual={err}/>)
+    report(<Assert key="bin. data to ascii file size test should not have failed" expect={null} actual={err}/>)
     done()
   })
 })
