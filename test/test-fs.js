@@ -28,8 +28,8 @@ describe('Get storage folders', (report, done) => {
 })
 
 describe('writeFile and readFile test', (report, done) => {
-  let path = dirs.DocumentDir + '/0.6.0-' + Date.now() + '/writeFileTest' + Date.now()
-  let data = 'hellofrom' + Date.now()
+  let path = dirs.DocumentDir+'/0.6.0-'+Date.now()+'/writeFileTest'+Date.now()
+  let data = 'hellofrom'+Date.now()
 
   // SETUP: make sure the test file does not yet exist so that we implicitly test that
   // writeFile creates the file in that case (also fixes #483)
@@ -43,7 +43,12 @@ describe('writeFile and readFile test', (report, done) => {
   .then(() => fs.readFile(path))
   .then(() => report(<Assert key="should have reported 'file not found'" expect={false} actual={true}/>))
   .catch((err) => {
-    report(<Assert key="Non-existing file should cause error" expect={'ENOENT'} actual={err.code}/>)
+    report(
+      <Assert key="Non-existing file should cause error" expect={'ENOENT'} actual={err.code}/>,
+      <Info key="error message">
+        <Text>{String(err)}</Text>
+      </Info>
+    )
   })
 
   .then(() => fs.readFile(dirs.DocumentDir))
@@ -94,14 +99,14 @@ describe('writeFile and readFile test', (report, done) => {
 })
 
 describe('append file test', (report, done) => {
-  let path = dirs.DocumentDir + '/append-test' + Date.now()
-  let content = 'test on ' + Date.now()
+  let path = dirs.DocumentDir+'/append-test'+Date.now()
+  let content = 'test on '+Date.now()
 
   fs.writeFile(path, content, 'utf8')
   .then(() => fs.appendFile(path, '100', 'utf8', true))
   .then(() => fs.readFile(path, 'utf8'))
   .then((data) => {
-    report(<Assert key="utf8 data should be appended" expect={content + '100'} actual={data}/>)
+    report(<Assert key="utf8 data should be appended" expect={content+'100'} actual={data}/>)
   })
   .catch((err) => {
     report(<Assert key="utf8 data check should not have failed" expect={null} actual={err}/>)
@@ -111,7 +116,7 @@ describe('append file test', (report, done) => {
   .then(() => fs.appendFile(path, getASCIIArray('200'), 'ascii'))
   .then(() => fs.readFile(path, 'ascii'))
   .then((data) => {
-    report(<Assert key="ascii data should be appended" expect={getASCIIArray(content + '100' + '200')} comparer={Comparer.equalToArray} actual={data}/>)
+    report(<Assert key="ascii data should be appended" expect={getASCIIArray(content+'100'+'200')} comparer={Comparer.equalToArray} actual={data}/>)
   })
   .catch((err) => {
     report(<Assert key="ascii data check should not have failed" expect={null} actual={err}/>)
@@ -122,7 +127,7 @@ describe('append file test', (report, done) => {
   .then(() => fs.readFile(path, 'base64'))
   .then((data) => {
     const actual = RNFetchBlob.base64.decode(data)
-    report(<Assert key="base64 data should be appended" expect={content + '100' + '200' + '300'} actual={actual}/>)
+    report(<Assert key="base64 data should be appended" expect={content+'100'+'200'+'300'} actual={actual}/>)
     done()
   })
   .catch((err) => {
@@ -133,8 +138,8 @@ describe('append file test', (report, done) => {
 
 describe('ls API test', (report, done) => {
   // Setup
-  let p = dirs.DocumentDir + '/unlink-test-' + Date.now()
-  fs.createFile(p, 'write' + Date.now(), 'utf8')
+  let p = dirs.DocumentDir+'/unlink-test-'+Date.now()
+  fs.createFile(p, 'write'+Date.now(), 'utf8')
   .then(() => fs.exists(p))
   .catch((err) => {
     report(<Assert key="Error creating file for test setup" expect={null} actual={err}/>)
@@ -157,13 +162,23 @@ describe('ls API test', (report, done) => {
     report(<Assert key="ls of file should have failed" expect={false} actual={true}/>)
   })
   .catch((err) => {
-    report(<Assert key="File instead of directory should fail" expect={'ENODIR'} actual={err.code}/>)
+    report(
+      <Assert key="File instead of directory should fail" expect={'ENODIR'} actual={err.code}/>,
+      <Info key="error message">
+        <Text>{String(err)}</Text>
+      </Info>
+    )
   })
 
   // Test - non-existent file (error)
   .then(() => fs.ls('hh87h8uhi'))
   .catch((err) => {
-    report(<Assert key="Wrong path should have error" expect={'ENOENT'} actual={err.code}/>)
+    report(
+      <Assert key="Wrong path should have error" expect={'ENOENT'} actual={err.code}/>,
+      <Info key="error message">
+        <Text>{String(err)}</Text>
+      </Info>
+    )
     done()
   })
 })
@@ -190,14 +205,19 @@ describe('exists API test', (report, done) => {
 })
 
 describe('create file API test', (report, done) => {
-  let p = dirs.DocumentDir + '/test-' + Date.now()
-  let raw = 'hello ' + Date.now()
+  let p = dirs.DocumentDir+'/test-'+Date.now()
+  let raw = 'hello '+Date.now()
 
   fs.createFile(p, raw, 'utf8')
   .then(() => fs.createFile(p, raw, 'utf8'))
   .then(() => report(<Assert key="should have reported 'file exists'" expect={false} actual={true}/>))
   .catch((err) => {
-    report(<Assert key="Already existing file should cause error" expect={'EEXIST'} actual={err.code}/>)
+    report(
+      <Assert key="Already existing file should cause error" expect={'EEXIST'} actual={err.code}/>,
+      <Info key="error message">
+        <Text>{String(err)}</Text>
+      </Info>
+    )
   })
 
   .then(() => fs.readStream(p, 'utf8'))
@@ -221,9 +241,9 @@ describe('create file API test', (report, done) => {
     done()
   })
 
-  function testBase64 () {
-    fs.createFile(p + '-base64', RNFetchBlob.base64.encode(raw), 'base64')
-    .then(() => fs.readStream(p + '-base64', 'utf8'))
+  function testBase64() {
+    fs.createFile(p+'-base64', RNFetchBlob.base64.encode(raw), 'base64')
+    .then(() => fs.readStream(p+'-base64', 'utf8'))
     .then((stream) => {
       let d = ''
       stream.open()
@@ -247,7 +267,7 @@ describe('create file API test', (report, done) => {
 })
 
 describe('mkdir and isDir API test', (report, done) => {
-  let p = dirs.DocumentDir + '/mkdir-test-' + Date.now()
+  let p = dirs.DocumentDir+'/mkdir-test-'+Date.now()
 
   fs.mkdir(p)
   .then((res) => {
@@ -277,15 +297,20 @@ describe('mkdir and isDir API test', (report, done) => {
 
   .then(() => fs.mkdir(p))
   .catch((err) => {
-    report(<Assert key="isDir should fail when folder exists" expect={'EEXIST'} actual={err.code}/>)
+    report(
+      <Assert key="isDir should fail when folder exists" expect={'EEXIST'} actual={err.code}/>,
+      <Info key="error message">
+        <Text>{String(err)}</Text>
+      </Info>
+    )
     done()
   })
 })
 
 describe('unlink and mkdir API test', (report, done) => {
-  let p = dirs.DocumentDir + '/unlink-test-' + Date.now()
+  let p = dirs.DocumentDir+'/unlink-test-'+Date.now()
 
-  fs.createFile(p, 'write' + Date.now(), 'utf8')
+  fs.createFile(p, 'write'+Date.now(), 'utf8')
   .then(() => fs.exists(p))
   .then((exist) => {
     report(<Assert key="file created" expect={true} actual={exist}/>)
@@ -305,8 +330,8 @@ describe('unlink and mkdir API test', (report, done) => {
     done()
   })
 
-  .then(() => fs.mkdir(p + '-dir'))
-  .then(() => fs.exists(p + '-dir'))
+  .then(() => fs.mkdir(p+'-dir'))
+  .then(() => fs.exists(p+'-dir'))
   .then((exist) => {
     report(<Assert key="mkdir should success" expect={true} actual={exist}/>)
   })
@@ -315,8 +340,8 @@ describe('unlink and mkdir API test', (report, done) => {
     done()
   })
 
-  .then(() => fs.unlink(p + '-dir'))
-  .then(() => fs.exists(p + '-dir'))
+  .then(() => fs.unlink(p+'-dir'))
+  .then(() => fs.exists(p+'-dir'))
   .then((exist) => {
     report(<Assert key="folder should be removed" expect={false} actual={exist}/>)
     done()
@@ -328,7 +353,7 @@ describe('unlink and mkdir API test', (report, done) => {
 })
 
 describe('write stream API test', (report, done) => {
-  let p = dirs.DocumentDir + '/write-stream' + Date.now()
+  let p = dirs.DocumentDir+'/write-stream'+Date.now()
   let expect = ''
 
   fs.createFile(p, '1234567890', 'utf8')
@@ -361,10 +386,10 @@ describe('write stream API test', (report, done) => {
     done()
   })
 
-  function base64Test () {
+  function base64Test() {
     fs.writeStream(p, 'base64', false)
     .then((ws) => {
-      for (let i = 0; i < 100; i++) {
+      for(let i = 0; i < 100; i++) {
         expect += String(i)
       }
       ws.write(RNFetchBlob.base64.encode(expect))
@@ -394,13 +419,13 @@ describe('write stream API test', (report, done) => {
 })
 
 describe('mv API test', {timeout: 10000}, (report, done) => {
-  let p = dirs.DocumentDir + '/mvTest' + Date.now()
-  let dest = p + '-dest-' + Date.now()
-  let content = Date.now() + '-test'
+  let p = dirs.DocumentDir+'/mvTest'+Date.now()
+  let dest = p+'-dest-'+Date.now()
+  let content = Date.now()+'-test'
 
   fs.createFile(p, content, 'utf8')
   .then(() => fs.mkdir(dest))
-  .then(() => fs.mv(p, dest + '/moved'))
+  .then(() => fs.mv(p, dest+'/moved'))
   .then(() => fs.exists(p))
   .then((exist) => {
     report(<Assert key="file should not exist in old path" expect={false} actual={exist}/>)
@@ -410,7 +435,7 @@ describe('mv API test', {timeout: 10000}, (report, done) => {
     done()
   })
 
-  .then(() => fs.exists(dest + '/moved'))
+  .then(() => fs.exists(dest+'/moved'))
   .then((exist) => {
     report(<Assert key="file should be moved to destination" expect={true} actual={exist}/>)
   })
@@ -428,7 +453,7 @@ describe('mv API test', {timeout: 10000}, (report, done) => {
     done()
   })
 
-  .then(() => fs.readStream(dest + '/moved'))
+  .then(() => fs.readStream(dest+'/moved'))
   .then((stream) => {
     let actual = ''
     stream.open()
@@ -451,14 +476,14 @@ describe('mv API test', {timeout: 10000}, (report, done) => {
 })
 
 describe('cp API test', {timeout: 10000}, (report, done) => {
-  let p = dirs.DocumentDir + '/cpTest' + Date.now()
-  let dest = p + '-dest-' + Date.now()
-  let content = Date.now() + '-test'
+  let p = dirs.DocumentDir+'/cpTest'+Date.now()
+  let dest = p+'-dest-'+Date.now()
+  let content = Date.now()+'-test'
 
   fs.createFile(p, content, 'utf8')
   .then(() => fs.mkdir(dest))
-  .then(() => fs.cp(p, dest + '/cp'))
-  .then(() => fs.exists(dest + '/cp'))
+  .then(() => fs.cp(p, dest+'/cp'))
+  .then(() => fs.exists(dest+'/cp'))
   .then((exist) => {
     report(<Assert key="file should be copy to destination" expect={true} actual={exist}/>)
   })
@@ -476,7 +501,7 @@ describe('cp API test', {timeout: 10000}, (report, done) => {
     done()
   })
 
-  .then(() => fs.readStream(dest + '/cp'))
+  .then(() => fs.readStream(dest+'/cp'))
   .then((stream) => {
     let actual = ''
     stream.open()
@@ -499,14 +524,14 @@ describe('cp API test', {timeout: 10000}, (report, done) => {
 })
 
 describe('ASCII data test', (report, done) => {
-  let p = dirs.DocumentDir + '/ASCII-test-' + Date.now()
-  let expect = 'fetch-blob-' + Date.now()
+  let p = dirs.DocumentDir+'/ASCII-test-'+Date.now()
+  let expect = 'fetch-blob-'+Date.now()
 
   fs.createFile(p, '', 'utf8')
   .then(() => fs.writeStream(p, 'ascii', false))
   .then((stream) => {
     const promises = []
-    for (let i = 0; i < expect.length; i++) {
+    for(let i = 0; i < expect.length; i++) {
       promises.push(stream.write([expect[i].charCodeAt(0)]))
     }
     promises.push(stream.write(['g'.charCodeAt(0), 'g'.charCodeAt(0)]))
@@ -530,7 +555,7 @@ describe('ASCII data test', (report, done) => {
     })
     stream.onEnd(() => {
       res = res.map((byte) => String.fromCharCode(byte)).join('')
-      report(<Assert key="data written in ASCII format should be correct" expect={expect + 'gg'} actual={res}/>)
+      report(<Assert key="data written in ASCII format should be correct" expect={expect+'gg'} actual={res}/>)
       done()
     })
   })
@@ -541,13 +566,13 @@ describe('ASCII data test', (report, done) => {
 })
 
 describe('ASCII file test', (report, done) => {
-  let p = dirs.DocumentDir + '/'
-  let filename = 'ASCII-file-test' + Date.now() + '.txt'
-  let expect = 'ascii test ' + Date.now()
+  let p = dirs.DocumentDir+'/'
+  let filename = 'ASCII-file-test'+Date.now()+'.txt'
+  let expect = 'ascii test '+Date.now()
   let base64 = RNFetchBlob.base64
 
-  fs.createFile(p + filename, getASCIIArray(expect), 'ascii')
-  .then(() => fs.readStream(p + filename, 'base64'))
+  fs.createFile(p+filename, getASCIIArray(expect), 'ascii')
+  .then(() => fs.readStream(p+filename, 'base64'))
   .then((stream) => {
     let actual = ''
     stream.open()
@@ -570,7 +595,7 @@ describe('ASCII file test', (report, done) => {
 })
 
 describe('format conversion', (report, done) => {
-  let p = dirs.DocumentDir + '/foo-' + Date.now()
+  let p = dirs.DocumentDir+'/foo-'+Date.now()
 
   fs.createFile(p, [102, 111, 111], 'ascii')
   .then(() => fs.readStream(p, 'utf8'))
@@ -630,9 +655,9 @@ describe('stat and lstat test', (report, done) => {
 
 describe('fs.slice test', (report, done) => {
   let source = null
-  let parts = fs.dirs.DocumentDir + '/tmp-source-'
+  let parts = fs.dirs.DocumentDir+'/tmp-source-'
   let dests = []
-  let combined = fs.dirs.DocumentDir + '/combined-' + Date.now() + '.jpg'
+  let combined = fs.dirs.DocumentDir+'/combined-'+Date.now()+'.jpg'
   let size = 0
 
   window.fetch = new RNFetchBlob.polyfill.Fetch({
@@ -651,13 +676,13 @@ describe('fs.slice test', (report, done) => {
     size = stat.size
     let promise = Promise.resolve()
     let cursor = 0
-    while (cursor < size) {
-      promise = promise.then(function (start) {
-        console.log('slicing part ', start, start + 40960)
+    while(cursor < size) {
+      promise = promise.then(function(start) {
+        console.log('slicing part ', start, start+40960)
         let offset = 0
-        return fs.slice(source, parts + start, start + offset, start + 40960)
+        return fs.slice(source, parts+start, start+offset, start+40960)
         .then((dest) => {
-          console.log('slicing part ', start + offset, start + 40960, 'done')
+          console.log('slicing part ', start+offset, start+40960, 'done')
           dests.push(dest)
           return Promise.resolve()
         })
@@ -671,8 +696,8 @@ describe('fs.slice test', (report, done) => {
   .then(() => {
     console.log('combinding files')
     let p = Promise.resolve()
-    for (let d in dests) {
-      p = p.then(function (chunk) {
+    for(let d in dests) {
+      p = p.then(function(chunk) {
         return fs.appendFile(combined, chunk, 'uri').then((write) => {
           console.log(write, 'bytes write')
         })
@@ -685,7 +710,7 @@ describe('fs.slice test', (report, done) => {
     report(
       <Assert key="verify file size" expect={size} actual={stat.size}/>,
       <Info key="image viewer">
-        <Image key="combined image" style={styles.image} source={{uri: prefix + combined}}/>
+        <Image key="combined image" style={styles.image} source={{uri: prefix+combined}}/>
       </Info>
     )
     done()
@@ -697,7 +722,7 @@ describe('fs.slice test', (report, done) => {
 })
 
 describe('hash API test', (report, done) => {
-  const txtFile = dirs.DocumentDir + '/hash-test-txt-' + Date.now()
+  const txtFile = dirs.DocumentDir+'/hash-test-txt-'+Date.now()
   let binFile;
 
   fetch(`${TEST_SERVER_URL}/public/github2.jpg`)
@@ -759,27 +784,42 @@ describe('hash API test', (report, done) => {
     done()
   })
 
-  function invalidFilenameCheck () {
+  function invalidFilenameCheck() {
     return fs.hash('INVALID_FILE', 'sha256')
     .then(() => report(<Assert key="should have reported 'INVALID_FILE file not found'" expect={false} actual={true}/>))
     .catch((err) => {
-      report(<Assert key="Non-existing file should cause error" expect={'ENOENT'} actual={err.code}/>)
+      report(
+        <Assert key="Non-existing file should cause error" expect={'ENOENT'} actual={err.code}/>,
+        <Info key="error message">
+          <Text>{String(err)}</Text>
+        </Info>
+      )
     })
   }
 
-  function dirInsteadOfFileCheck () {
+  function dirInsteadOfFileCheck() {
     return fs.hash(dirs.DocumentDir, 'sha256')
     .then(() => report(<Assert key="should have reported 'is a directory'" expect={false} actual={true}/>))
     .catch((err) => {
-      report(<Assert key="Directory instead of file should cause error" expect={'EISDIR'} actual={err.code}/>)
+      report(
+        <Assert key="Directory instead of file should cause error" expect={'EISDIR'} actual={err.code}/>,
+        <Info key="error message">
+          <Text>{String(err)}</Text>
+        </Info>
+      )
     })
   }
 
-  function invalidAlgorithmCheck () {
+  function invalidAlgorithmCheck() {
     return fs.hash(binFile, 'INVALID')
     .then(() => report(<Assert key="should have reported 'invalid algorithm'" expect={false} actual={true}/>))
     .catch((err) => {
-      report(<Assert key="Invalid hash algorithm should cause error" expect={'EINVAL'} actual={err.code}/>)
+      report(
+        <Assert key="Invalid hash algorithm should cause error" expect={'EINVAL'} actual={err.code}/>,
+        <Info key="error message">
+          <Text>{String(err)}</Text>
+        </Info>
+      )
     })
   }
 })
@@ -815,9 +855,9 @@ describe('binary data to ascii file size checking', (report, done) => {
   })
 })
 
-function getASCIIArray (str) {
+function getASCIIArray(str) {
   let r = []
-  for (let i = 0; i < str.length; i++) {
+  for(let i = 0; i < str.length; i++) {
     r.push(str[i].charCodeAt(0))
   }
   return r
