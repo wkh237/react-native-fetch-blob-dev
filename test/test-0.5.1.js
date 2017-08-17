@@ -29,9 +29,7 @@ describe('Download file to storage with custom file extension', (report, done) =
     console.log(resp.path())
     tmpFilePath = resp.path()
     report(<Info key={`image from ${tmpFilePath}`}>
-      <Image
-        source={{uri: prefix+tmpFilePath}}
-        style={styles.image}/>
+      <Image source={{uri: prefix+tmpFilePath}} style={styles.image}/>
     </Info>)
     done()
   })
@@ -50,20 +48,24 @@ describe('Read cached file via file stream', (report, done) => {
     stream.onData((chunk) => {
       data += chunk
     })
+    stream.onError((err) => {
+      report(
+        <Info key="error message">
+          <Text>
+            {String(err)}
+          </Text>
+        </Info>
+      )
+      done()
+    })
     stream.onEnd(() => {
       report(
-        <Assert key="image should have value"
-                expect={0}
-                comparer={Comparer.smaller}
-                actual={data.length}/>,
+        <Assert key="image should have value" expect={0} comparer={Comparer.smaller} actual={data.length}/>,
         <Info key="image from read stream">
           <Image source={{uri: data}} style={styles.image}/>
         </Info>
       )
       done()
-    })
-    stream.onError((err) => {
-      console.log('stream err', err)
     })
   })
   .catch((err) => {
@@ -77,11 +79,13 @@ describe('File stream reader error should be able to handled', (report, done) =>
   .then((stream) => {
     stream.open()
     stream.onError((err) => {
-      report(<Info key="error message">
-        <Text>
-          {String(err)}
-        </Text>
-      </Info>)
+      report(
+        <Info key="error message">
+          <Text>
+            {String(err)}
+          </Text>
+        </Info>
+      )
       done()
     })
   })
@@ -112,9 +116,7 @@ describe('Upload from file storage', (report, done) => {
     }, 'RNFetchBlob-file://'+path)
     .then((resp) => {
       resp = resp.json()
-      report(
-        <Assert key="confirm the file has been uploaded" expect={filename} actual={resp.name}/>
-      )
+      report(<Assert key="confirm the file has been uploaded" expect={filename} actual={resp.name}/>)
       done()
     })
   })
@@ -180,13 +182,32 @@ describe('Upload and download at the same time', (report, done) => {
     stream.onData((chunk) => {
       actual += chunk
     })
-    stream.onEnd(() => {
-      console.log('###', actual)
+    stream.onError((err) => {
       report(
-        <Assert
-          key="response data should be the filename"
-          expect={filename}
-          actual={JSON.parse(actual).name}/>)
+        <Info key="'Upload and download at the same time onError' error message">
+          <Text>
+            {String(err)}
+          </Text>
+        </Info>
+      )
+      done()
+    })
+    stream.onEnd(() => {
+      let parsed;
+      try {
+        parsed = JSON.parse(actual)
+      }catch(e){
+        report(
+          <Assert key="response data should be the filename" expect={filename} actual={parsed.name}/>,
+          <Info key="'response data should be the filename' error message">
+            <Text>
+              {"Error parsing JSON: "+actual+", "+String(e)}
+            </Text>
+          </Info>
+        )
+        done()
+        return
+      }
       done()
     })
   })
@@ -226,8 +247,7 @@ describe('Session create mechanism test', (report, done) => {
     let expect = resp.map((p) => {
       return p.path()
     })
-    report(
-      <Assert key="check if session state correct" expect={expect} comparer={Comparer.equalToArray} actual={actual}/>)
+    report(<Assert key="check if session state correct" expect={expect} comparer={Comparer.equalToArray} actual={actual}/>)
     done()
   })
   .catch((err) => {
@@ -236,7 +256,7 @@ describe('Session create mechanism test', (report, done) => {
   })
 })
 
-describe('Session API CRUD test', (report, done) => {
+false && describe('Session API CRUD test', (report, done) => {
   let sessionName = 'test-session-'+Date.now()
   let baseDir = sysDirs.DocumentDir+'/'+sessionName
 

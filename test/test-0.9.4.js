@@ -146,7 +146,7 @@ describe('#118 readStream performance prepare the file', (report, done) => {
             console.log(size, ' read')
             tick = Date.now()
             report(
-              <Info key="size" uid="100">
+              <Info key="size 1" uid="100">
                 <Text key="AA">File 1 {size}/22000000 bytes read</Text>
                 <Text key="BB">File 2 {size2}/22000000 bytes read</Text>
               </Info>)
@@ -154,7 +154,7 @@ describe('#118 readStream performance prepare the file', (report, done) => {
         })
         stream.onEnd(() => {
           report(
-            <Info key="size" uid="100"><Text>{size} bytes read</Text></Info>,
+            <Info key="size 2" uid="100"><Text>{size} bytes read</Text></Info>,
             <Info key="elapsed"><Text>{Date.now()-start} ms</Text></Info>,
             <Info key="events"><Text>{count} times</Text></Info>,
             <Assert key="JS thread is not blocked" expect={true} actual={true}/>,

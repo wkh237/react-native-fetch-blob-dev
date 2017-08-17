@@ -28,7 +28,7 @@ describe('json stream via HTTP', (report, done) => {
       return
     begin = Date.now()
     report(
-      <Info key="report" uid="100">
+      <Info key="report 1" uid="100">
         <Text>{count} records</Text>
       </Info>
     )
@@ -58,9 +58,11 @@ describe('json stream via fs', (report, done) => {
         return
       begin = Date.now()
       console.log(count);
-      report(<Info key="report" uid="100">
-        <Text>{count} records</Text>
-      </Info>)
+      report(
+        <Info key="report 2" uid="100">
+          <Text>{count} records</Text>
+        </Info>
+      )
       done()
     })
   })
